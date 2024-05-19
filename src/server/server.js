@@ -17,11 +17,12 @@ app.post('/api/addmodule',
 }
 );
 
-app.get('/api/getmodules', 
+app.get('/api/gettrackmodules', 
   moduleController.getModules,
   (req, res) => {
     res.status(200).json(res.locals.allModules);
 });
+
 
 
 // GLOBAL ERROR HANDLER // 

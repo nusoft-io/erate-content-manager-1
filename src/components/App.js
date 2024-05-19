@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar.jsx";
 import TracksComp from "./TracksComp.jsx";
 import ModulesComp from "./ModulesComp.jsx";
 import QuestionsComp from "./QuestionsComp.jsx";
+import InitComp from "./InitComp.jsx";
 
 
 
@@ -15,15 +16,23 @@ export default function App() {
   const renderComp = (comp) => {
     switch (comp) {
       case 'initComp':
-        return <initComp />;
-      case 'TracksComp':
-        return <TracksComp />;
-      case 'ModulesComp':
-        return <ModulesComp />;
+        return <InitComp />;
+      case 'Man-Sales':
+        return <TracksComp activeComp={activeComp}/>;
+      case 'Man-Mrkt':
+        return <TracksComp activeComp={activeComp}/>;
+      case 'Man-Mgmt':
+        return <TracksComp activeComp={activeComp}/>;
+      case 'SP-Sales':
+        return <TracksComp activeComp={activeComp}/>;
+      case 'SP-Mgmt':
+        return <TracksComp activeComp={activeComp}/>;
+      case 'SP-Ops':
+        return <TracksComp activeComp={activeComp}/>;
       case 'QuestionsComp':
         return <QuestionsComp />; 
       default:
-        return <initComp />;
+        return <InitComp />;
     }
   };
 
