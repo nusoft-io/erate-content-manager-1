@@ -1,12 +1,15 @@
 import React from "react";
+import '../styles/App.scss';
+import Sidebar from "./Sidebar.jsx";
 
-import MainModule from "./MainModule.jsx";
+
 
 export default function App() {
   return (
-    <div>
-      <h1>App Container</h1>
-      <MainModule />
+    <div className="app-container">
+      <Sidebar />
+      <div className="content">
+      </div>
     </div>
   );
 }
