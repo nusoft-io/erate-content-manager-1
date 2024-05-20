@@ -17,17 +17,17 @@ export default function App() {
     switch (comp) {
       case 'initComp':
         return <InitComp />;
-      case 'Man-Sales':
+      case 'man_sales':
         return <TracksComp activeComp={activeComp}/>;
-      case 'Man-Mrkt':
+      case 'man_mgmt':
         return <TracksComp activeComp={activeComp}/>;
-      case 'Man-Mgmt':
+      case 'man_mrkt':
         return <TracksComp activeComp={activeComp}/>;
-      case 'SP-Sales':
+      case 'sp_sales':
         return <TracksComp activeComp={activeComp}/>;
-      case 'SP-Mgmt':
+      case 'sp_mgmt':
         return <TracksComp activeComp={activeComp}/>;
-      case 'SP-Ops':
+      case 'sp_opsinv':
         return <TracksComp activeComp={activeComp}/>;
       case 'QuestionsComp':
         return <QuestionsComp />; 

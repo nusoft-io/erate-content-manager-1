@@ -1,5 +1,5 @@
 const express =  require('express');
-const moduleController = require('./Controllers/moduleController.js');
+const trackController = require('./Controllers/trackController.js');
 
 
 const app = express();
@@ -10,15 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-app.post('/api/addmodule',
-  moduleController.addModule,
-  (req, res) => {
-    res.status(200).json('module added');
-}
-);
-
-app.get('/api/gettrackmodules', 
-  moduleController.getModules,
+app.post('/api/gettrackmodules', 
+  trackController.getTrackModules,
   (req, res) => {
     res.status(200).json(res.locals.allModules);
 });

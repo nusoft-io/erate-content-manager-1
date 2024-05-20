@@ -8,15 +8,16 @@ function TracksComp({ activeComp }) {
 
   useEffect(() => {
     fetch('/api/gettrackmodules', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({ activeComp })
     })
       .then(res => res.json())
       .then(data => {
         console.log('fetched modules..', data)
-        console.log('clicked track', activeComp)
+        // console.log('clicked track', activeComp)
         // setModules(data)
       })
   }, [activeComp]);

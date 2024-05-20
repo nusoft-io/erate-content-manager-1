@@ -29,32 +29,32 @@ function Sidebar({ setActiveComp }) {
           {expanded === 'TracksComp' && (
             <>
             <ul className='sub-items-ul'>
-              <li className='sb-submenu-item' onClick={() => setActiveComp('Man-Sales')}>
+              <li className='sb-submenu-item' onClick={() => setActiveComp('man_sales')}>
                 <div className='sb-menu-item-title'>
                   <span>Manufactuer Sales</span>
                 </div>
               </li>
-              <li className='sb-submenu-item' onClick={() => setActiveComp('Man-Mgmt')}>
+              <li className='sb-submenu-item' onClick={() => setActiveComp('man_mgmt')}>
                 <div className='sb-menu-item-title'>
                   <span>Manufacturer Management</span>
                 </div>
               </li>
-              <li className='sb-submenu-item' onClick={() => setActiveComp('Man-Mrkt')}>
+              <li className='sb-submenu-item' onClick={() => setActiveComp('man_mrkt')}>
                 <div className='sb-menu-item-title'>
                   <span>Manufacturer Marketing</span>
                 </div>
               </li>
-              <li className='sb-submenu-item' onClick={() => setActiveComp('SP-Sales')}>
+              <li className='sb-submenu-item' onClick={() => setActiveComp('sp_sales')}>
                 <div className='sb-menu-item-title'>
                   <span>Service Provider Sales</span>
                 </div>
               </li>
-              <li className='sb-submenu-item' onClick={() => setActiveComp('SP-Mgmt')}>
+              <li className='sb-submenu-item' onClick={() => setActiveComp('sp_mgmt')}>
                 <div className='sb-menu-item-title'>
                   <span>Service Provider Management</span>
                 </div>
               </li>
-              <li className='sb-submenu-item' onClick={() => setActiveComp('SP-Ops')}>
+              <li className='sb-submenu-item' onClick={() => setActiveComp('sp_opsinv')}>
                 <div className='sb-menu-item-title'>
                   <span>Service Provider Sales Operations/Invoicing</span>
                 </div>
