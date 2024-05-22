@@ -37,11 +37,11 @@ trackController.getTrackModules = async (req, res, next) => {
     const trackId = trackMatcher[req.body.activeComp];
     const queryStr = `SELECT * FROM track_module_match WHERE track_id = ?;`;
     const response = await db.query(queryStr, [trackId]);
-    console.log('looking here',response);
+    // console.log('looking here',response);
     const trackModules = [];
-    // response.forEach((module) => {
-    //   allModules.push({'Module Name' : module.module_name , 'Module Id' : module.module_id});
-    // });
+    response.forEach((module) => {
+      trackModules.push({'Module Id' : module.module_id});
+    });
     res.locals.trackModules = trackModules;
   } catch (err) {
     return next({

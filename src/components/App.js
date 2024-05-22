@@ -3,7 +3,8 @@ import { useState } from "react";
 import '../styles/App.scss';
 import Sidebar from "./Sidebar.jsx";
 import TracksComp from "./TracksComp.jsx";
-import ModulesComp from "./ModulesComp.jsx";
+import EditModulesComp from "./EditModulesComp.jsx";
+import AddModulesComp from "./AddModulesComp.jsx";
 import QuestionsComp from "./QuestionsComp.jsx";
 import InitComp from "./InitComp.jsx";
 
@@ -17,6 +18,7 @@ export default function App() {
     switch (comp) {
       case 'initComp':
         return <InitComp />;
+      
       case 'man_sales':
         return <TracksComp activeComp={activeComp}/>;
       case 'man_mgmt':
@@ -29,6 +31,12 @@ export default function App() {
         return <TracksComp activeComp={activeComp}/>;
       case 'sp_opsinv':
         return <TracksComp activeComp={activeComp}/>;
+
+      case 'EditModule':
+        return <EditModulesComp />;
+      case 'AddModule':
+        return <AddModulesComp />;
+
       case 'QuestionsComp':
         return <QuestionsComp />; 
       default:

@@ -1,5 +1,6 @@
 const express =  require('express');
 const trackController = require('./Controllers/trackController.js');
+const moduleController = require('./Controllers/moduleController.js');
 
 
 const app = express();
@@ -9,13 +10,31 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-
+// ---------------- ROUTES ---------------- //
 app.post('/api/gettrackmodules', 
   trackController.getTrackModules,
+  (req, res) => {
+    res.status(200).json(res.locals.trackModules);
+});
+
+app.post('/api/addmodule', 
+  moduleController.addModule,
+  (req, res) => {
+    res.status(200).send('Module added successfully');
+});
+
+app.get('/api/getallmodules',
+  moduleController.getAllModules,
   (req, res) => {
     res.status(200).json(res.locals.allModules);
 });
 
+app.post('/api/deletemodule',
+  moduleController.deleteModule,
+  (req, res) => {
+    res.status(200).send('Module deleted successfully');
+  }
+);
 
 
 // GLOBAL ERROR HANDLER // 
