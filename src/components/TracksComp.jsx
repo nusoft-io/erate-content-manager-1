@@ -1,10 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, act } from 'react';
 import Sidebar from './Sidebar.jsx';
 import '../styles/TracksComp.scss';
 
 function TracksComp({ activeComp }) {
 
+
   const [modules, setModules] = useState([]);
+
+  const TrackNames = {
+    'man_sales': 'Manufactuer Sales',
+    'man_mgmt': 'Manufactuer Management',
+    'man_mrkt': 'Manufactuer Marketing',
+    'sp_sales': 'Service Provider Sales',
+    'sp_mgmt': 'Service Provider Management',
+    'sp_opsinv': 'Service Provider Sales Operations and Inventory'
+  }
 
   useEffect(() => {
     fetch('/api/gettrackmodules', {
@@ -32,6 +42,7 @@ function TracksComp({ activeComp }) {
   return (
     <>
       <div className="content">
+        <div>{TrackNames[activeComp]}</div>
         <div>
           {Array.isArray(modules) ? (
             modules.map((module, index) => (

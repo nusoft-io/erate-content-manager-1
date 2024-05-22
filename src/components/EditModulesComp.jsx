@@ -21,24 +21,6 @@ function EditModulesComp() {
   }
 
 
-  // function deleteModule(moduleId) {
-  //   console.log(moduleId);
-  //   fetch('/api/deletemodule', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ moduleId: moduleId })
-  //   })
-  //   .then(() => {
-  //     fetchAllModules();
-  //   })
-  //   .catch(error => {
-  //     console.error('Error:', error);
-  //   });
-  // }
-
-
   function deleteModule(moduleId) {
     console.log(moduleId);
     const confirmation = window.confirm("Are you sure you want to delete this module?");

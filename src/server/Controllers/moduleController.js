@@ -58,6 +58,8 @@ moduleController.deleteModule = async (req, res, next) => {
     console.log('checking hereee',moduleId)
     const queryStr = `DELETE FROM modules WHERE module_id = ?`;
     await db.query(queryStr, [moduleId]);
+    const queryStr2 = `DELETE FROM track_module_match WHERE module_id = ?`;
+    await db.query(queryStr2, [moduleId]);
   } catch (err) {
     return next({
       log: 'moduleController.deleteModule: ERROR: Invalid request',
