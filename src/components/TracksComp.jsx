@@ -26,7 +26,7 @@ function TracksComp({ activeComp }) {
     })
       .then(res => res.json())
       .then(data => {
-        console.log('fetched modules..', data);
+        // console.log('fetched modules..', data);
         if (data.length > 0) {
           setModules(data);
         } else {
@@ -39,6 +39,12 @@ function TracksComp({ activeComp }) {
       });
   }, [activeComp]);
 
+
+  // function checkModules() {
+  //   console.log('modules:', modules)
+  // }
+  // checkModules();
+
   return (
     <>
       <div className="content">
@@ -46,8 +52,8 @@ function TracksComp({ activeComp }) {
         <div>
           {Array.isArray(modules) ? (
             modules.map((module, index) => (
-              <div key={index}>
-                {module.name /* Adjust based on your module data structure */}
+              <div key={index} className='track-module-item'>
+                {module}
               </div>
             ))
           ) : (

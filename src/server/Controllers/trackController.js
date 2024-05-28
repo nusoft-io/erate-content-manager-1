@@ -35,14 +35,23 @@ const trackMatcher = {
 trackController.getTrackModules = async (req, res, next) => {
   try{
     const trackId = trackMatcher[req.body.activeComp];
+    console.log('trackId', trackId)
     const queryStr = `SELECT * FROM track_module_match WHERE track_id = ?;`;
     const response = await db.query(queryStr, [trackId]);
-    // console.log('looking here',response);
     const trackModules = [];
+    const trackModuleNames = [];
+    // loop over the response and get the module ids and add to trackModules arr
     response.forEach((module) => {
       trackModules.push({'Module Id' : module.module_id});
     });
-    res.locals.trackModules = trackModules;
+    // loop over the track modules arr and get the module names
+    for (let i = 0; i < trackModules.length; i++) {
+      const queryStr2 = `SELECT module_name FROM modules WHERE module_id = ?;`;
+      const response = await db.query(queryStr2, [trackModules[i]['Module Id']]);
+      trackModuleNames.push(response[0].module_name);
+    }
+    // send the module names back to frontend 
+    res.locals.trackModules = trackModuleNames;
   } catch (err) {
     return next({
       log: 'trackController.getTrackModules: ERROR: Invalid request',
