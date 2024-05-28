@@ -1,11 +1,14 @@
 import React, { useState, useEffect, act } from 'react';
-import Sidebar from './Sidebar.jsx';
+import { Reorder } from "framer-motion"
 import '../styles/TracksComp.scss';
 
 function TracksComp({ activeComp }) {
 
 
   const [modules, setModules] = useState([]);
+  const [items, setItems] = useState([]);
+  const [hasOrder, setHasOrder] = useState(false);
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
 
   const TrackNames = {
     'man_sales': 'Manufactuer Sales',
@@ -16,6 +19,7 @@ function TracksComp({ activeComp }) {
     'sp_opsinv': 'Service Provider Sales Operations and Inventory'
   }
 
+  // POPULATE MODULES //
   useEffect(() => {
     fetch('/api/gettrackmodules', {
       method: 'POST',
@@ -27,10 +31,13 @@ function TracksComp({ activeComp }) {
       .then(res => res.json())
       .then(data => {
         // console.log('fetched modules..', data);
-        if (data.length > 0) {
-          setModules(data);
+        setHasOrder(data.hasOrder);
+        if (data.modules.length > 0) {
+          setModules(data.modules);
+          setItems(data.modules);
         } else {
           setModules('No modules found for the selected track');
+          setItems([]);
         }
       })
       .catch(error => {
@@ -39,27 +46,49 @@ function TracksComp({ activeComp }) {
       });
   }, [activeComp]);
 
+  // ORDER CHANGED //
+  function saveOrderChanges() {
+    fetch('/api/updateModuleOrder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ items })
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Order updated successfully..');
+        setHasOrder(true);
+      })
+      .catch(error => {
+        console.error('Error updating order:', error);
+    })
 
-  // function checkModules() {
-  //   console.log('modules:', modules)
-  // }
-  // checkModules();
+  }
+
+
+
 
   return (
     <>
       <div className="content">
         <div>{TrackNames[activeComp]}</div>
-        <div>
-          {Array.isArray(modules) ? (
-            modules.map((module, index) => (
-              <div key={index} className='track-module-item'>
-                {module}
-              </div>
-            ))
-          ) : (
-            <div>{modules}</div>
-          )}
-        </div>
+
+        {!hasOrder ? <div>SET MODULE ORDER</div> : null}
+
+        {unsavedChanges ? <div>Unsaved Changes</div> : null}
+
+
+        <button onClick={saveOrderChanges}>Save Changes</button>
+
+        <Reorder.Group as="ol" axis="y" values={items} onReorder={setItems}>
+          {items.map((item) => (
+            <Reorder.Item className='module-item' key={item} value={item}>
+              {item}
+            </Reorder.Item>
+          ))}
+        </Reorder.Group>
+
       </div>
     </>
   );

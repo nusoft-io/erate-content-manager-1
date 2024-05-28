@@ -36,6 +36,15 @@ app.post('/api/deletemodule',
   }
 );
 
+app.post('/api/updateModuleOrder',
+  moduleController.updateModuleOrder,
+  (req, res) => {
+    res.status(200).send({'message':'Order updated successfully'})
+  }
+ );
+
+
+
 
 // GLOBAL ERROR HANDLER // 
 app.use((err, req, res, next) => {

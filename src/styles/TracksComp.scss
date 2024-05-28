@@ -1,7 +1,21 @@
+$background-grey: #e8e8e8;
+$text-color: #333;
+$erate-blue: #0d3e70;
+$erate-orange: #ff6b00;
+
 .app-container {
   display: flex;
  }
  
  .content {
    flex-grow: 1;
+ }
+
+ .module-item {
+  border: 1px solid #ccc;
+  width: 300px;
+  text-align: center;
+  height: 40px;
+  margin: 1px 0 1px 0;
+  background-color: $background-grey;
  }

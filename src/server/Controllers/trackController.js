@@ -40,18 +40,20 @@ trackController.getTrackModules = async (req, res, next) => {
     const response = await db.query(queryStr, [trackId]);
     const trackModules = [];
     const trackModuleNames = [];
+    let hasOrder = true;
     // loop over the response and get the module ids and add to trackModules arr
     response.forEach((module) => {
+      if (!module.module_order) hasOrder = false;
       trackModules.push({'Module Id' : module.module_id});
     });
     // loop over the track modules arr and get the module names
     for (let i = 0; i < trackModules.length; i++) {
       const queryStr2 = `SELECT module_name FROM modules WHERE module_id = ?;`;
-      const response = await db.query(queryStr2, [trackModules[i]['Module Id']]);
-      trackModuleNames.push(response[0].module_name);
+      const response2 = await db.query(queryStr2, [trackModules[i]['Module Id']]);
+      trackModuleNames.push(response2[0].module_name);
     }
     // send the module names back to frontend 
-    res.locals.trackModules = trackModuleNames;
+    res.locals.trackModules = {'modules': trackModuleNames, 'hasOrder' : hasOrder};
   } catch (err) {
     return next({
       log: 'trackController.getTrackModules: ERROR: Invalid request',
@@ -60,5 +62,7 @@ trackController.getTrackModules = async (req, res, next) => {
   }
   return next();
 };
+
+
 
 module.exports = trackController;
