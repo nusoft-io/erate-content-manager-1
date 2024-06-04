@@ -1,6 +1,7 @@
 import React, { useState, useEffect, act } from 'react';
 import { Reorder } from "framer-motion"
 import '../styles/TracksComp.scss';
+import { set } from 'react-hook-form';
 
 function TracksComp({ activeComp }) {
 
@@ -9,6 +10,7 @@ function TracksComp({ activeComp }) {
   const [items, setItems] = useState([]);
   const [hasOrder, setHasOrder] = useState(false);
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [removed, setRemoved] = useState(false);
 
   const TrackNames = {
     'man_sales': 'Manufactuer Sales',
@@ -33,27 +35,37 @@ function TracksComp({ activeComp }) {
         // console.log('fetched modules..', data);
         setHasOrder(data.hasOrder);
         if (data.modules.length > 0) {
+          // console.log('lookking here', data.modules)
           setModules(data.modules);
           setItems(data.modules);
+          setRemoved(false);
+
         } else {
           setModules('No modules found for the selected track');
           setItems([]);
+          setRemoved(false);
         }
       })
       .catch(error => {
         console.error('Error fetching modules:', error);
         setModules('Error fetching modules');
       });
-  }, [activeComp]);
+  }, [activeComp, removed]);
 
-  // ORDER CHANGED //
+  // CHANGES MADE WARNING //
+  function handleChanges() {
+    setUnsavedChanges(true);
+  }
+
+  // SAVE CHANGED ORDER //
   function saveOrderChanges() {
+    // console.log('items order check', items)
     fetch('/api/updateModuleOrder', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ items })
+      body: JSON.stringify({ items , track: activeComp})
     })
       .then(res => res.json())
       .then(data => {
@@ -63,11 +75,30 @@ function TracksComp({ activeComp }) {
       .catch(error => {
         console.error('Error updating order:', error);
     })
+    setUnsavedChanges(false);
+  }
 
+  // REMOVE MODULE //
+  function removeModule(item){
+    const itemKey = item.modId;
+    // console.log('item key', itemKey)
+    fetch('/api/removetrackmodule',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ modId: itemKey, track: activeComp })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data) {
+        setRemoved(true);
+      }
+    })
   }
 
 
-
+// console.log('items', items)
 
   return (
     <>
@@ -81,10 +112,11 @@ function TracksComp({ activeComp }) {
 
         <button onClick={saveOrderChanges}>Save Changes</button>
 
-        <Reorder.Group as="ol" axis="y" values={items} onReorder={setItems}>
+        <Reorder.Group as="ol" axis="y" values={items} onReorder={(reorderedItems) => { setItems(reorderedItems); handleChanges(); }}>
           {items.map((item) => (
-            <Reorder.Item className='module-item' key={item} value={item}>
-              {item}
+            <Reorder.Item className='module-item' key={item.modId} value={item}>
+              {item.modName}
+              <button className='remove-mod-btn' onClick={()=> removeModule(item)}>X</button>
             </Reorder.Item>
           ))}
         </Reorder.Group>

@@ -41,7 +41,16 @@ app.post('/api/updateModuleOrder',
   (req, res) => {
     res.status(200).send({'message':'Order updated successfully'})
   }
- );
+);
+
+app.post('/api/removetrackmodule',
+  trackController.removeTrackModule,
+  (req, res) => {
+    res.status(200).json(res.locals.removed);
+  }
+);
+
+
 
 
 

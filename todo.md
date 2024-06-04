@@ -1,6 +1,6 @@
 
 TRACKS :
-- be able to remove module from that track
+
 
 
 MODULES : 
@@ -14,4 +14,3 @@ QUESTONS :
 
 
 currently working on:
-when populating modules for track, make sure they populate in the correct order. not sure if they are right now or not

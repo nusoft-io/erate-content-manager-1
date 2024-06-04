@@ -2,6 +2,24 @@ const db = require('../database.js')
 
 const moduleController = {};
 
+const trackMatcher = {
+  'man_sales': 1,
+  'man_mgmt': 2,
+  'man_mrkt': 3,
+  'sp_sales': 4,
+  'sp_mgmt': 5,
+  'sp_opsinv': 6,
+}
+
+const trackMatcherName = {
+  1: 'man_sales',
+  2: 'man_mgmt',
+  3: 'man_mrkt',
+  4: 'sp_sales',
+  5: 'sp_mgmt',
+  6: 'sp_opsinv',
+}
+
 
 moduleController.addModule = async (req, res, next) => {
   try{
@@ -47,10 +65,33 @@ moduleController.addModule = async (req, res, next) => {
 
 
 moduleController.getAllModules = async (req, res, next) => {
-  try{
+  try {
     const queryStr = `SELECT * FROM modules`;
     const allModules = await db.query(queryStr);
-    res.locals.allModules = allModules;
+    let allNewModules = [];
+
+    for (const module of allModules) {
+      let AllModInfo = {
+        module_id: module.module_id,
+        module_name: module.module_name,
+        video_link: module.video_link,
+        attachedTracks: [],
+      };
+
+      const trackQuery = `SELECT track_id FROM track_module_match WHERE module_id = ?`;
+      const moduleId = module.module_id;
+      const attachedTracks = await db.query(trackQuery, [moduleId]);
+
+      for (let el of attachedTracks) {
+        AllModInfo.attachedTracks.push({'track_id': el.track_id, 'track_name': trackMatcherName[el.track_id]});
+      }
+
+      allNewModules.push(AllModInfo);
+    }
+
+    // console.log('allNewModules', allNewModules);
+    res.locals.allModules = allNewModules;
+
   } catch (err) {
     return next({
       log: 'moduleController.getAllModules: ERROR: Invalid request',
@@ -59,6 +100,9 @@ moduleController.getAllModules = async (req, res, next) => {
   }
   return next();
 };
+
+
+
 
 
 moduleController.deleteModule = async (req, res, next) => {
@@ -83,21 +127,19 @@ moduleController.deleteModule = async (req, res, next) => {
 moduleController.updateModuleOrder = async (req, res, next) => {
   try{
     const items = req.body.items;
-    // console.log('items',items)
+    const trackId = trackMatcher[req.body.track];
     newOrder = {};
     for (let i = 0; i < items.length; i++) {
-      const queryStr = `SELECT * from modules WHERE module_name = ?`;
-      let result = await db.query(queryStr, [items[i]]);
-      newOrder[i] = result[0].module_id;
+      newOrder[i] = items[i].modId;
     }
 
-    // console.log('newOrder', newOrder)
+    console.log('newOrder', newOrder)
 
     for (let key in newOrder) {
       let modOrder = key;
       let modId = newOrder[key];
-      const queryStr2 = `UPDATE track_module_match SET module_order = ? WHERE module_id = ?`;
-      const VALUES = [modOrder, modId];
+      const queryStr2 = `UPDATE track_module_match SET module_order = ? WHERE module_id = ? AND track_id = ?;`;
+      const VALUES = [modOrder, modId, trackId];
       await db.query(queryStr2, VALUES);
     }
 
