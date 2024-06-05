@@ -20,5 +20,4 @@ QUESTONS :
 
 
 currently working on:
-- the modules comp
-  - getting all the needed data to the frontend
+- add questions/answers to the database

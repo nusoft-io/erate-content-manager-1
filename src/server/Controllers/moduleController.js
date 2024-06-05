@@ -175,6 +175,25 @@ moduleController.updateVideoLink = async (req, res, next) => {
   }
 };
 
+moduleController.addQuestion = async (req, res, next) => {
+  try {
+    console.log(' in addquestion / req body',req.body)
+    const moduleId = req.body.moduleId;
+    const question = req.body.question;
+    const answers = req.body.answers;
+
+    const queryStr1 = `INSERT INTO questions (module_id, question_text) VALUES (?, ?)`;
+    const VALUES1 = [moduleId, question];
+    const questionId = await db.query(queryStr1, VALUES1);
+    console.log('questionId', questionId.insertId)
+  } catch (err) {
+    return next({
+      log: 'moduleController.addQuestion: ERROR: Invalid request',
+      message: { err: 'moduleController.addQuestion: ERROR: Check server logs for details' },
+    })
+  }
+}
+
 
 
 module.exports = moduleController;

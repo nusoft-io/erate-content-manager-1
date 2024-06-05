@@ -9,12 +9,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { useForm } from "react-hook-form";
-
+import Modal from '@mui/material/Modal';
+import { useForm, useFieldArray } from "react-hook-form";
 
 const TrackNames = {
   'man_sales': 'Manufacturer Sales',
@@ -25,10 +24,72 @@ const TrackNames = {
   'sp_opsinv': 'Service Provider Sales Operations and Inventory'
 };
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '60%',
+  height: '50%',
+  bgcolor: 'background.paper',
+  border: '1px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 function Row(props) {
   const { row, deleteModule, updateVideoLink}  = props;
   const [open, setOpen] = useState(false);
-  const {register, handleSubmit} = useForm();
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    defaultValues: {
+      answers: Array(2).fill({ answer: '', correct: false })
+    }
+  });
+  const [initialAnswerCount, setInitialAnswerCount] = useState(2);
+
+  //modal state variables //
+  const [openModal, setOpenModal] = React.useState(false);
+  const handleOpen = () => setOpenModal(true);
+  const handleClose = () => {
+    setOpenModal(false);
+    reset();
+  }
+  
+  const [answerAmount, setAnswerAmount] = useState(initialAnswerCount);
+
+  const { fields, append } = useFieldArray({
+    control,
+    name: "answers"
+  });
+
+  const addQuestion = (moduleId, answersData, questionData) => {
+    console.log('module id', moduleId, 'question data', questionData, 'answers data', answersData);
+    fetch('/api/addquestion', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ moduleId: moduleId, question: questionData, answers: answersData })
+    })
+    .then(response => response.json());
+    handleClose();
+  };
+
+  const handleCheckboxChange = (index, value) => {
+    fields[index].correct = value;
+  };
+
+  const onSubmit = (data) => {
+    const hasCorrectAnswer = data.answers.some(answer => answer.correct);
+
+    if (!hasCorrectAnswer) {
+      alert('Please select at least one correct answer.');
+      return;
+    }
+
+    addQuestion(row.module_id, data.answers, data.question);
+    reset({ answers: Array(2).fill({ answer: '', correct: false }) });
+  };
 
   return (
     <React.Fragment>
@@ -65,9 +126,10 @@ function Row(props) {
                 ) : (
                   "No video link available"
                 )}
-                <form onSubmit={handleSubmit((data) => {
-                  updateVideoLink(row.module_id, data.video_link);
-                  })}>
+                  <form onSubmit={handleSubmit((data) => {
+                    updateVideoLink(row.module_id, data.video_link)
+                    reset();
+                    })}>
                   <input {...register('video_link')} placeholder='New Video Link' />
                   <input type="submit" />
                 </form>
@@ -87,7 +149,58 @@ function Row(props) {
 
             <Box sx={{ margin: 1 }}>
                 <div>
-                  <span>Questions</span>
+                  <div>Questions</div>
+
+
+
+                  <div>
+                    <button onClick={handleOpen}>Add Question</button>
+                    <Modal
+                      open={openModal}
+                      onClose={handleClose}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={modalStyle}>
+                        <div>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                          <input {...register("question")} placeholder="Question" />
+                          {fields.map((item, index) => (
+                            <div key={item.id}>
+                              <input {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
+                            </div>
+                          ))}
+
+                          <button type="button" onClick={() => {
+                            append({ answer: "", correct: false });
+                            setAnswerAmount(answerAmount + 1);
+                            }}>
+                            Add Answer
+                          </button>
+                          <fieldset>
+                            <legend>
+                              Select correct answer/s
+                            </legend>
+                            <div>
+                            {fields.map((_, index) => (
+                              <div key={index}>
+                                <label htmlFor={`correct${index}`}>Answer {index + 1}</label>
+                                <input 
+                                  type="checkbox" 
+                                  {...register(`answers.${index}.correct`)}
+                                  onChange={(e) => handleCheckboxChange(index, e.target.checked)} 
+                                />
+                              </div>
+                            ))}
+                            </div>
+                          </fieldset>
+                          <input type="submit" />
+                        </form>
+                        </div>
+                      </Box>
+                    </Modal>
+                  </div>
+
                 </div>
             </Box>
           </Collapse>

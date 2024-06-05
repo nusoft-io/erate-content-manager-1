@@ -57,6 +57,14 @@ app.post('/api/updatevideolink',
   }
 );
 
+app.post('/api/addquestion',
+  moduleController.addQuestion,
+  (req, res) => {
+    res.status(200).send({'message':'Question Added Successfully'});
+  }
+);
+
+
 
 
 
