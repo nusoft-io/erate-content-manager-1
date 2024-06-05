@@ -54,16 +54,10 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Video Link
-              </Typography>
-              <form onSubmit={handleSubmit((data) => {
-                updateVideoLink(row.module_id, data.video_link);
-              })}>
-                <input {...register('video_link')} placeholder='New Video Link' />
-                <input type="submit" />
-              </form>
-              <Typography variant="body1">
+              <div>Module Details</div>
+
+              <div>
+                <span>Video Details</span>
                 {row.video_link ? (
                   <a href={row.video_link} target="_blank" rel="noopener noreferrer">
                     {row.video_link}
@@ -71,20 +65,16 @@ function Row(props) {
                 ) : (
                   "No video link available"
                 )}
-              </Typography>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+                <form onSubmit={handleSubmit((data) => {
+                  updateVideoLink(row.module_id, data.video_link);
+                  })}>
+                  <input {...register('video_link')} placeholder='New Video Link' />
+                  <input type="submit" />
+                </form>
+              </div>
 
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                Attached Tracks
-              </Typography>
-              <Typography variant="body1">
+              <div>
+                <span>Track Details</span>
                 {row.attachedTracks && row.attachedTracks.length > 0 ? (
                   row.attachedTracks.map((track, index) => (
                     <span key={index}>{TrackNames[track.track_name]}</span>
@@ -92,11 +82,18 @@ function Row(props) {
                 ) : (
                   "Not connected to any tracks"
                 )}
-              </Typography>
+              </div>
+            </Box>
+
+            <Box sx={{ margin: 1 }}>
+                <div>
+                  <span>Questions</span>
+                </div>
             </Box>
           </Collapse>
         </TableCell>
       </TableRow>
+
     </React.Fragment>
   );
 }

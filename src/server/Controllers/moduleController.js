@@ -29,15 +29,21 @@ moduleController.addModule = async (req, res, next) => {
     }
     const intended_track = req.body.intended_track;
     let moduleOrder = {};
-
+    
     // popoulate order num for intended track
     const queryStr3 = `SELECT * FROM track_module_match WHERE track_id = ? ORDER BY module_order DESC LIMIT 1`;
     for (let el of intended_track) {
       let lastElement = await db.query(queryStr3, [el]);
-      console.log('last element', lastElement)
-      moduleOrder[el] = (Number(lastElement[0].module_order) + 1);
+      if (!lastElement.length) {
+        moduleOrder[el] = 0;
+        continue;
+      } else {
+        console.log('last element', lastElement)
+        moduleOrder[el] = (Number(lastElement[0].module_order) + 1);
+      }
     }
-
+    
+    
     // add in the module to the modules table
     const queryStr = `INSERT INTO modules (module_name, video_link) VALUES (?,?)`;
     await db.query(queryStr, [moduleData.module_name, moduleData.video_link]);
