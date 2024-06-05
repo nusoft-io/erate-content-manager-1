@@ -50,6 +50,13 @@ app.post('/api/removetrackmodule',
   }
 );
 
+app.post('/api/updatevideolink',
+  moduleController.updateVideoLink,
+  (req, res) => {
+    res.status(200).send({'message':'Video Link Updated Successfully'});
+  }
+);
+
 
 
 

@@ -4,7 +4,13 @@ TRACKS :
 
 
 MODULES : 
-- edit module should show all questions attached to it, and should let user delete questions
+- filter by track
+- edit module:
+  - should be able to add existing module to track
+  - show tracks its attached to
+  - show questions attached to module
+  - delete question attacked to module
+  - 
 
 
 QUESTONS :
@@ -14,3 +20,5 @@ QUESTONS :
 
 
 currently working on:
+- the modules comp
+  - getting all the needed data to the frontend

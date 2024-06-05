@@ -1,54 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar.jsx';
+import Table from './Table.jsx';
+
 
 function EditModulesComp() {
 
-  const [allModules, setAllModules] = useState([]);
-
-  useEffect(() => {
-    fetchAllModules();
-  }, []); 
-
-  function fetchAllModules() {
-    fetch('/api/getallmodules', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    // .then(data => console.log('data',data))
-    .then(data => setAllModules(data));
-  }
-
-
-  function deleteModule(moduleId) {
-    console.log(moduleId);
-    const confirmation = window.confirm("Are you sure you want to delete this module?");
-    if (confirmation) {
-      fetch('/api/deletemodule', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ moduleId: moduleId })
-      })
-      .then(() => {
-        fetchAllModules();
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-    }
-  }
-
-console.log('looking here',allModules)
 
   return (
     <>
       <div className="content">
         module stuff
-        <div>
+        {/* <div>
           {allModules.map((module, index) => {
             return (
               <div key={module.module_id}>
@@ -57,7 +18,10 @@ console.log('looking here',allModules)
               </div>
             )
           })}
-        </div>
+        </div> */}
+
+      <Table />
+
       </div>
     </>
   )
