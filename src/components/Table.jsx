@@ -42,6 +42,7 @@ const modalStyle = {
   p: 4,
 };
 
+// ------------------------  MAIN INNER FUNCTION (ROWS) ----------------------- //
 function Row(props) {
   const { row, deleteModule, updateVideoLink}  = props;
   const [open, setOpen] = useState(false);
@@ -74,7 +75,12 @@ function Row(props) {
     name: "answers"
   });
 
-  // add question to DB function //
+
+
+
+// ------------------------  QUESTION FUNCTIONS ----------------------- //
+
+  // ADD QUESTION W/ANSWERS TO DB //
   const addQuestion = (moduleId, answersData, questionData) => {
     console.log('module id', moduleId, 'question data', questionData, 'answers data', answersData);
     fetch('/api/addquestion', {
@@ -87,11 +93,12 @@ function Row(props) {
     .then(response => response.json());
     handleClose();
   };
-
+  
+  // ADD QUESTION HELPER FUNC FOR CHECKBOX ANSWERS //
   const handleCheckboxChange = (index, value) => {
     fields[index].correct = value;
   };
-
+  // ADD QUESTION HELPER FUNC FOR SUBMITTING QUESTION //
   const onSubmit = (data) => {
     const hasCorrectAnswer = data.answers.some(answer => answer.correct);
 
@@ -104,8 +111,6 @@ function Row(props) {
     reset({ answers: Array(2).fill({ answer: '', correct: false }) });
   };
 
-
-// QUESTION FUNCTIONS //
 
   // GET QUESTIONS FROM DB FUNCTION //
   const getQuestions = (moduleId) => {
@@ -152,6 +157,7 @@ function Row(props) {
   }
 
 
+// ------------------------  MODAL/DROPDOWN FUNCTIONS ----------------------- //
   const showQuestionModal = (moduleId) => {
     if (showQuestions) {
       setShowQuestions(false);
@@ -331,7 +337,7 @@ function Row(props) {
 }
 
 
-// MAIN FUNCTION //
+// ------------------------  MAIN OUTTER FUNCTION (TABLE) ----------------------- //
 export default function ModulesTable() {
 
   const [allModules, setAllModules] = useState([]);
