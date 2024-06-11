@@ -64,6 +64,21 @@ app.post('/api/addquestion',
   }
 );
 
+app.post('/api/getquestions', 
+  moduleController.getQuestions,
+  (req, res) => {
+    res.status(200).json(res.locals.questions);
+  }
+);
+
+app.post('/api/deletequestions',
+  moduleController.deleteQuestions,
+  (req, res) => {
+    res.status(200).send({'message':'Questions Deleted Successfully'});
+  }
+);
+
+
 
 
 

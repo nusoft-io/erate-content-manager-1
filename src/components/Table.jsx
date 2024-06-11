@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Modal from '@mui/material/Modal';
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, set } from "react-hook-form";
 
 const TrackNames = {
   'man_sales': 'Manufacturer Sales',
@@ -47,21 +47,27 @@ function Row(props) {
   });
   const [initialAnswerCount, setInitialAnswerCount] = useState(2);
 
-  //modal state variables //
+  // modal state variables //
   const [openModal, setOpenModal] = React.useState(false);
-  const handleOpen = () => setOpenModal(true);
+  const [answerAmount, setAnswerAmount] = useState(initialAnswerCount);
+  const [questions, setQuestions] = useState([]);
+  const [showQuestions, setShowQuestions] = useState(false);
+
+  // modal functions //
+  const handleOpen = () => {
+    setOpenModal(true);
+  }
   const handleClose = () => {
     setOpenModal(false);
     reset();
   }
-  
-  const [answerAmount, setAnswerAmount] = useState(initialAnswerCount);
 
   const { fields, append } = useFieldArray({
     control,
     name: "answers"
   });
 
+  // add question to DB function //
   const addQuestion = (moduleId, answersData, questionData) => {
     console.log('module id', moduleId, 'question data', questionData, 'answers data', answersData);
     fetch('/api/addquestion', {
@@ -91,6 +97,56 @@ function Row(props) {
     reset({ answers: Array(2).fill({ answer: '', correct: false }) });
   };
 
+
+  const getQuestions = (moduleId) => {
+    console.log('looking for mod id here',moduleId);
+    fetch('/api/getquestions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ moduleId: moduleId })
+    })
+    .then(response => response.json())
+    .then(data => setQuestions(data));
+    // .then(data => console.log('returned from fetch: ', data));
+  }
+
+  const deleteQuestions = (moduleId,questionId) => {
+    console.log('looking for mod id here',moduleId);
+    console.log('looking for question id here: ', questionId);
+    fetch('/api/deletequestions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ moduleId: moduleId, questionId: questionId})
+    })
+    .then(response => response.json())
+    .then(data => {
+      getQuestions(moduleId);
+    });
+  }
+
+  const showQuestionModal = (moduleId) => {
+    if (showQuestions) {
+      setShowQuestions(false);
+    } else {
+      getQuestions(moduleId);
+      setShowQuestions(true);
+    }
+  }
+
+  const openDropdown = () => {
+    if (open){
+      setOpen(false);
+      setShowQuestions(false);
+    } else {
+      setOpen(true);
+    }
+  }
+
+
   return (
     <React.Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
@@ -98,7 +154,7 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => setOpen(!open)}
+            onClick={() => openDropdown()}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -151,8 +207,6 @@ function Row(props) {
                 <div>
                   <div>Questions</div>
 
-
-
                   <div>
                     <button onClick={handleOpen}>Add Question</button>
                     <Modal
@@ -200,6 +254,25 @@ function Row(props) {
                       </Box>
                     </Modal>
                   </div>
+
+                  <button onClick={()=> {
+                    showQuestionModal(row.module_id);
+                    }
+                  }>show questions</button>
+
+                    {showQuestions ? <div>
+                    {questions.map(question => {
+                      console.log('question', question);
+                      return (
+                        <div key={question.question_id}>
+                          <div>{question.question_text}</div>
+                          <button onClick={()=> deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
+                        </div>
+                      )
+                    })}
+                  </div> : null}
+    
+                  
 
                 </div>
             </Box>

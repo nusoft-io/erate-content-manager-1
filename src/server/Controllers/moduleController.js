@@ -195,5 +195,36 @@ moduleController.addQuestion = async (req, res, next) => {
 }
 
 
+moduleController.getQuestions = async (req, res, next) => {
+  try {
+    const moduleId = req.body.moduleId;
+    const queryStr = `SELECT * FROM questions WHERE module_id = ?`;
+    const questions = await db.query(queryStr, [moduleId]);
+    res.locals.questions = questions;
+  } catch (err) {
+    return next({
+      log: 'moduleController.getQuestions: ERROR: Invalid request',
+      message: { err: 'moduleController.getQuestions: ERROR: Check server logs for details' },
+    })
+  }
+  return next();
+}
+
+moduleController.deleteQuestions = async (req, res, next) => {
+  try {
+    const questionId = req.body.questionId;
+    const moduleId = req.body.moduleId;
+    const queryStr = `DELETE FROM questions WHERE question_id = ? AND module_id = ?;`;
+    await db.query(queryStr, [questionId, moduleId]);
+    return next();
+  } catch (err) {
+    return next({
+      log: 'moduleController.deleteQuestions: ERROR: Invalid request',
+      message: { err: 'moduleController.deleteQuestions: ERROR: Check server logs for details' },
+    })
+  }
+}
+
+
 
 module.exports = moduleController;
