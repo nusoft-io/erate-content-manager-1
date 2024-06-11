@@ -24,6 +24,11 @@ const TrackNames = {
   'sp_opsinv': 'Service Provider Sales Operations and Inventory'
 };
 
+const trueFalse = {
+  0: 'Wrong Answer',
+  1: 'Correct Answer',
+}
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -52,6 +57,8 @@ function Row(props) {
   const [answerAmount, setAnswerAmount] = useState(initialAnswerCount);
   const [questions, setQuestions] = useState([]);
   const [showQuestions, setShowQuestions] = useState(false);
+  const [answers, setAnswers] = useState([]);
+  const [showAnswers, setShowAnswers] = useState(false);
 
   // modal functions //
   const handleOpen = () => {
@@ -98,6 +105,9 @@ function Row(props) {
   };
 
 
+// QUESTION FUNCTIONS //
+
+  // GET QUESTIONS FROM DB FUNCTION //
   const getQuestions = (moduleId) => {
     console.log('looking for mod id here',moduleId);
     fetch('/api/getquestions', {
@@ -109,9 +119,9 @@ function Row(props) {
     })
     .then(response => response.json())
     .then(data => setQuestions(data));
-    // .then(data => console.log('returned from fetch: ', data));
   }
 
+  // DELETE QUESTIONS FROM DB FUNCTION //
   const deleteQuestions = (moduleId,questionId) => {
     console.log('looking for mod id here',moduleId);
     console.log('looking for question id here: ', questionId);
@@ -128,12 +138,35 @@ function Row(props) {
     });
   }
 
+  // SHOW ANSWERS FOR QUESTION FUNCTION //
+  const getAnswers = (questionId) => {
+    fetch('/api/getanswers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ questionId: questionId })
+    })
+    .then(response => response.json())
+    .then(data => setAnswers(data))
+  }
+
+
   const showQuestionModal = (moduleId) => {
     if (showQuestions) {
       setShowQuestions(false);
     } else {
       getQuestions(moduleId);
       setShowQuestions(true);
+    }
+  }
+
+  const showAnswerModal = (questionId) => {
+    if (showAnswers) {
+      setShowAnswers(false);
+    } else {
+      getAnswers(questionId);
+      setShowAnswers(true);
     }
   }
 
@@ -267,6 +300,19 @@ function Row(props) {
                         <div key={question.question_id}>
                           <div>{question.question_text}</div>
                           <button onClick={()=> deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
+                          <button onClick={()=> showAnswerModal(question.question_id)}>Show Answers</button>
+                          {showAnswers ? 
+                            <div>
+                              {answers.map(answer => {
+                                return (
+                                  <div key={answer.answer_id}>
+                                    <div>{answer.answer_text}</div>
+                                    <div>{trueFalse[answer.is_correct]}</div>
+                                  </div>
+                                )
+                              })}
+                            </div> : null  
+                          }
                         </div>
                       )
                     })}

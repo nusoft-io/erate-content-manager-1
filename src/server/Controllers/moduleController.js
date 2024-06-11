@@ -185,7 +185,13 @@ moduleController.addQuestion = async (req, res, next) => {
     const queryStr1 = `INSERT INTO questions (module_id, question_text) VALUES (?, ?)`;
     const VALUES1 = [moduleId, question];
     const questionId = await db.query(queryStr1, VALUES1);
-    console.log('questionId', questionId.insertId)
+    console.log('looking at questionId', questionId.insertId)
+
+    const queryStr2 = `INSERT INTO answers (question_id, answer_text, is_correct) VALUES (?, ?, ?)`;
+    for (let el of answers) {
+      const VALUES2 = [questionId.insertId, el.answer, el.correct];
+      await db.query(queryStr2, VALUES2);
+    }
   } catch (err) {
     return next({
       log: 'moduleController.addQuestion: ERROR: Invalid request',
@@ -223,6 +229,24 @@ moduleController.deleteQuestions = async (req, res, next) => {
       message: { err: 'moduleController.deleteQuestions: ERROR: Check server logs for details' },
     })
   }
+}
+
+
+moduleController.getAnswers = async (req, res, next) => {
+  try {
+    const questionId = req.body.questionId;
+    console.log('questionId in middleware',questionId)
+    const queryStr = `SELECT * FROM answers WHERE question_id = ?`;
+    const answers = await db.query(queryStr, [questionId]);
+    console.log('answers in middleware',answers)
+    res.locals.answers = answers;
+  } catch (err) {
+    return next({
+      log: 'moduleController.getAnswers: ERROR: Invalid request',
+      message: { err: 'moduleController.getAnswers: ERROR: Check server logs for details' },
+    })
+  }
+  return next();
 }
 
 

@@ -78,6 +78,12 @@ app.post('/api/deletequestions',
   }
 );
 
+app.post('/api/getanswers',
+  moduleController.getAnswers,
+  (req, res) => {
+    res.status(200).json(res.locals.answers);
+  }
+);
 
 
 
