@@ -103,23 +103,29 @@ function TracksComp({ activeComp }) {
   return (
     <>
       <div className="content">
-        <div>{TrackNames[activeComp]}</div>
+        <div className='track-top-container'>
+          <div className="trackTitle">{TrackNames[activeComp]}</div>
+          <h2>Edit / Order Modules</h2>
+          <button className='save-changes-btn' onClick={saveOrderChanges}>Save Changes</button>
+        </div>
 
-        {!hasOrder ? <div>SET MODULE ORDER</div> : null}
+        {/* {!hasOrder ? <div>SET MODULE ORDER</div> : null} */}
 
-        {unsavedChanges ? <div>Unsaved Changes</div> : null}
+        {unsavedChanges ? <div className='unsaved-warning'>Unsaved Changes</div> : null}
+
+        <div className='track-help-msg'>Drag & Drop Module Cards To Reorder Or Click "X" To Delete The Module From The Track</div>
 
 
-        <button onClick={saveOrderChanges}>Save Changes</button>
-
-        <Reorder.Group as="ol" axis="y" values={items} onReorder={(reorderedItems) => { setItems(reorderedItems); handleChanges(); }}>
-          {items.map((item) => (
-            <Reorder.Item className='module-item' key={item.modId} value={item}>
-              {item.modName}
-              <button className='remove-mod-btn' onClick={()=> removeModule(item)}>X</button>
-            </Reorder.Item>
-          ))}
-        </Reorder.Group>
+        <div className='mod-card-master-container'>
+          <Reorder.Group as="ol" axis="y" values={items} onReorder={(reorderedItems) => { setItems(reorderedItems); handleChanges(); }}>
+            {items.map((item) => (
+              <Reorder.Item className='module-item' key={item.modId} value={item}>
+                <div className='mod-item-text'>{item.modName}</div>
+                <button className='remove-mod-btn' onClick={()=> removeModule(item)}>X</button>
+              </Reorder.Item>
+            ))}
+          </Reorder.Group>
+        </div>
 
       </div>
     </>
