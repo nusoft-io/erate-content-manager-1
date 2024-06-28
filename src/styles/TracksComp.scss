@@ -17,6 +17,15 @@ $erate-orange: #ff6b00;
     padding: 0;
     width: 87%;
    }
+   h2 {
+    font-family: 'open sans', sans-serif;
+    font-size: 20px;
+    color: $text-color;
+    text-align: center;
+    margin: 10px 0 0 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid #e8e8e8;
+  }
  }
 
 
@@ -30,12 +39,7 @@ $erate-orange: #ff6b00;
   width: 100%;
   padding-bottom: 4px;
   padding-top: 4px;
-  h2 {
-    font-family: 'open sans', sans-serif;
-    font-size: 20px;
-    color: $text-color;
 
-  }
  }
 
 .trackTitle {

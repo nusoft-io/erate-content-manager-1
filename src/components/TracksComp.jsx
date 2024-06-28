@@ -105,11 +105,12 @@ function TracksComp({ activeComp }) {
       <div className="content">
         <div className='track-top-container'>
           <div className="trackTitle">{TrackNames[activeComp]}</div>
-          <h2>Edit / Order Modules</h2>
+
           <button className='save-changes-btn' onClick={saveOrderChanges}>Save Changes</button>
         </div>
 
         {/* {!hasOrder ? <div>SET MODULE ORDER</div> : null} */}
+        <h2>Edit / Order Modules</h2>
 
         {unsavedChanges ? <div className='unsaved-warning'>Unsaved Changes</div> : null}
 
