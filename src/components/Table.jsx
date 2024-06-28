@@ -14,6 +14,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Modal from '@mui/material/Modal';
 import { useForm, useFieldArray, set } from "react-hook-form";
+import '../styles/Table.scss';
 
 const TrackNames = {
   'man_sales': 'Manufacturer Sales',
@@ -209,15 +210,18 @@ function Row(props) {
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <div>Module Details</div>
 
-              <div>
-                <span>Video Details</span>
+            <Box sx={{ margin: 1 }}>
+
+              <div className='vid-details-container'>
+                <span className='box-detail-title'>Video Details</span>
                 {row.video_link ? (
-                  <a href={row.video_link} target="_blank" rel="noopener noreferrer">
-                    {row.video_link}
-                  </a>
+                  <>
+                    <span>Current Module Video Link</span>
+                    <a className='vid-detail-link' href={row.video_link} target="_blank" rel="noopener noreferrer">
+                      {row.video_link}
+                    </a>
+                  </>
                 ) : (
                   "No video link available"
                 )}
@@ -225,13 +229,13 @@ function Row(props) {
                     updateVideoLink(row.module_id, data.video_link)
                     reset();
                     })}>
-                  <input {...register('video_link')} placeholder='New Video Link' />
-                  <input type="submit" />
+                  <input className='new-vid-link-input' {...register('video_link')} placeholder='New Video Link' />
+                  <input className='new-vid-link-submit' type="submit" />
                 </form>
               </div>
 
-              <div>
-                <span>Track Details</span>
+              <div className='track-details-container'>
+                <span className='box-detail-title'>Track Details</span>
                 {row.attachedTracks && row.attachedTracks.length > 0 ? (
                   row.attachedTracks.map((track, index) => (
                     <span key={index}>{TrackNames[track.track_name]}</span>
@@ -244,9 +248,10 @@ function Row(props) {
 
             <Box sx={{ margin: 1 }}>
                 <div>
-                  <div>Questions</div>
+                  
 
-                  <div>
+                  <div className='question-details-container'>
+                    <span className='box-detail-title'>Questions</span>
                     <button onClick={handleOpen}>Add Question</button>
                     <Modal
                       open={openModal}

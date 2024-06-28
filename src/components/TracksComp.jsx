@@ -104,7 +104,7 @@ function TracksComp({ activeComp }) {
     <>
       <div className="content">
         <div className='track-top-container'>
-          <div className="trackTitle">Edit / Order Modules</div>
+          <div className="trackTitle">Edit / Order Track Modules</div>
 
           <button className='save-changes-btn' onClick={saveOrderChanges}>Save Changes</button>
         </div>

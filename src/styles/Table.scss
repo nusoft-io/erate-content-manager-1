@@ -1,0 +1,23 @@
+$background-grey: #e8e8e8;
+$text-color: #333;
+$erate-blue: #0d3e70;
+$erate-orange: #ff6b00;
+
+
+.vid-details-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-details-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.box-detail-title {
+  font-family: 'Open Sans', sans-serif;
+  color: $erate-blue;
+  font-size: 20px;
+  border-bottom: 1px solid #e8e8e8;
+}
