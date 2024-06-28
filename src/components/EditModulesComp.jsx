@@ -7,8 +7,10 @@ function EditModulesComp() {
 
   return (
     <>
-      <div className="content">
-        module stuff
+    <div className='edit-mod-title-container'>
+      <div className='edit-mod-title'>Edit Modules</div>
+    </div>
+
         {/* <div>
           {allModules.map((module, index) => {
             return (
@@ -22,7 +24,7 @@ function EditModulesComp() {
 
       <Table />
 
-      </div>
+
     </>
   )
 }
