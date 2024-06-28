@@ -203,137 +203,141 @@ function Row(props) {
           {row.module_name}
         </TableCell>
         <TableCell>
-          <button onClick={() => { deleteModule(row.module_id) }}>Delete Module</button>
+          <button className='erate-btn delete-mod-btn' onClick={() => { deleteModule(row.module_id) }}>Delete Module</button>
         </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 , paddingLeft: 0, paddingRight: 0}} colSpan={6}>
 
-            <Box sx={{ margin: 1 }}>
+          <Collapse in={open} timeout="auto" style={{ paddingBottom: 0, paddingTop: 0 }}>
+            <div className='open-details-master-container'>
+              <Box sx={{ margin: 0 }}>
 
-              <div className='vid-details-container'>
-                <span className='box-detail-title'>Video Details</span>
-                {row.video_link ? (
-                  <>
-                    <span>Current Module Video Link</span>
-                    <a className='vid-detail-link' href={row.video_link} target="_blank" rel="noopener noreferrer">
-                      {row.video_link}
-                    </a>
-                  </>
-                ) : (
-                  "No video link available"
-                )}
-                  <form onSubmit={handleSubmit((data) => {
-                    updateVideoLink(row.module_id, data.video_link)
-                    reset();
-                    })}>
-                  <input className='new-vid-link-input' {...register('video_link')} placeholder='New Video Link' />
-                  <input className='new-vid-link-submit' type="submit" />
-                </form>
-              </div>
+                <div className='vid-details-container'>
+                  <span className='box-detail-title'>Video Details</span>
+                  {row.video_link ? (
+                    <>
+                      <span>Current Module Video Link</span>
+                      <a className='vid-detail-link' href={row.video_link} target="_blank" rel="noopener noreferrer">
+                        {row.video_link}
+                      </a>
+                    </>
+                  ) : (
+                    "No video link available"
+                  )}
+                    <form onSubmit={handleSubmit((data) => {
+                      updateVideoLink(row.module_id, data.video_link)
+                      reset();
+                      })}>
+                    <input className='new-vid-link-input' {...register('video_link')} placeholder='New Video Link' />
+                    <input className='new-vid-link-submit' type="submit" />
+                  </form>
+                </div>
 
-              <div className='track-details-container'>
-                <span className='box-detail-title'>Track Details</span>
-                {row.attachedTracks && row.attachedTracks.length > 0 ? (
-                  row.attachedTracks.map((track, index) => (
-                    <span key={index}>{TrackNames[track.track_name]}</span>
-                  ))
-                ) : (
-                  "Not connected to any tracks"
-                )}
-              </div>
-            </Box>
+                <div className='track-details-container'>
+                  <span className='box-detail-title'>Track Details</span>
+                  {row.attachedTracks && row.attachedTracks.length > 0 ? (
+                    row.attachedTracks.map((track, index) => (
+                      <span key={index}>{TrackNames[track.track_name]}</span>
+                    ))
+                  ) : (
+                    "Not connected to any tracks"
+                  )}
+                </div>
+              </Box>
 
-            <Box sx={{ margin: 1 }}>
-                <div>
-                  
+              <Box sx={{ margin: 0 }}>
+                  <div>
+                    
 
-                  <div className='question-details-container'>
-                    <span className='box-detail-title'>Questions</span>
-                    <button onClick={handleOpen}>Add Question</button>
-                    <Modal
-                      open={openModal}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={modalStyle}>
-                        <div>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                          <input {...register("question")} placeholder="Question" />
-                          {fields.map((item, index) => (
-                            <div key={item.id}>
-                              <input {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
-                            </div>
-                          ))}
-
-                          <button type="button" onClick={() => {
-                            append({ answer: "", correct: false });
-                            setAnswerAmount(answerAmount + 1);
-                            }}>
-                            Add Answer
-                          </button>
-                          <fieldset>
-                            <legend>
-                              Select correct answer/s
-                            </legend>
-                            <div>
-                            {fields.map((_, index) => (
-                              <div key={index}>
-                                <label htmlFor={`correct${index}`}>Answer {index + 1}</label>
-                                <input 
-                                  type="checkbox" 
-                                  {...register(`answers.${index}.correct`)}
-                                  onChange={(e) => handleCheckboxChange(index, e.target.checked)} 
-                                />
+                    <div className='question-details-container'>
+                      <span className='box-detail-title'>Questions</span>
+                      <button onClick={handleOpen}>Add Question</button>
+                      <Modal
+                        open={openModal}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                        <Box sx={modalStyle}>
+                          <div>
+                          <form onSubmit={handleSubmit(onSubmit)}>
+                            <input {...register("question")} placeholder="Question" />
+                            {fields.map((item, index) => (
+                              <div key={item.id}>
+                                <input {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
                               </div>
                             ))}
-                            </div>
-                          </fieldset>
-                          <input type="submit" />
-                        </form>
-                        </div>
-                      </Box>
-                    </Modal>
+
+                            <button type="button" onClick={() => {
+                              append({ answer: "", correct: false });
+                              setAnswerAmount(answerAmount + 1);
+                              }}>
+                              Add Answer
+                            </button>
+                            <fieldset>
+                              <legend>
+                                Select correct answer/s
+                              </legend>
+                              <div>
+                              {fields.map((_, index) => (
+                                <div key={index}>
+                                  <label htmlFor={`correct${index}`}>Answer {index + 1}</label>
+                                  <input 
+                                    type="checkbox" 
+                                    {...register(`answers.${index}.correct`)}
+                                    onChange={(e) => handleCheckboxChange(index, e.target.checked)} 
+                                  />
+                                </div>
+                              ))}
+                              </div>
+                            </fieldset>
+                            <input type="submit" />
+                          </form>
+                          </div>
+                        </Box>
+                      </Modal>
+                    </div>
+
+                    <button onClick={()=> {
+                      showQuestionModal(row.module_id);
+                      }
+                    }>show questions</button>
+
+                      {showQuestions ? <div>
+                      {questions.map(question => {
+                        console.log('question', question);
+                        return (
+                          <div key={question.question_id}>
+                            <div>{question.question_text}</div>
+                            <button onClick={()=> deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
+                            <button onClick={()=> showAnswerModal(question.question_id)}>Show Answers</button>
+                            {showAnswers ? 
+                              <div>
+                                {answers.map(answer => {
+                                  return (
+                                    <div key={answer.answer_id}>
+                                      <div>{answer.answer_text}</div>
+                                      <div>{trueFalse[answer.is_correct]}</div>
+                                    </div>
+                                  )
+                                })}
+                              </div> : null  
+                            }
+                          </div>
+                        )
+                      })}
+                    </div> : null}
+      
+                    
+
                   </div>
+              </Box>
 
-                  <button onClick={()=> {
-                    showQuestionModal(row.module_id);
-                    }
-                  }>show questions</button>
-
-                    {showQuestions ? <div>
-                    {questions.map(question => {
-                      console.log('question', question);
-                      return (
-                        <div key={question.question_id}>
-                          <div>{question.question_text}</div>
-                          <button onClick={()=> deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
-                          <button onClick={()=> showAnswerModal(question.question_id)}>Show Answers</button>
-                          {showAnswers ? 
-                            <div>
-                              {answers.map(answer => {
-                                return (
-                                  <div key={answer.answer_id}>
-                                    <div>{answer.answer_text}</div>
-                                    <div>{trueFalse[answer.is_correct]}</div>
-                                  </div>
-                                )
-                              })}
-                            </div> : null  
-                          }
-                        </div>
-                      )
-                    })}
-                  </div> : null}
-    
-                  
-
-                </div>
-            </Box>
+            </div>
           </Collapse>
+
         </TableCell>
       </TableRow>
 
