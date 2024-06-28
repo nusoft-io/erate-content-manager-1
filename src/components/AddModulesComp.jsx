@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import '../styles/AddModulesComp.scss';
 
 function AddModulesComp() {
 
@@ -27,11 +28,24 @@ function AddModulesComp() {
 
   return (
     <>
-      <div>AddModulesComp</div>
+    <div className='add-mod-title-container'>
+      <div className='add-mod-title'>Add Modules</div>
+    </div>
+    
+    <div className='add-mod-form-title'>Add Module Form</div>
+
+    <div className='add-mod-form-container'>
       <form className='add-module-form' onSubmit={handleSubmit(onSubmit)}>
-        <input {...register('module_name', { required: true })} placeholder='Module Name' />
-        <input {...register('video_link')} placeholder='Module Video Link' />
+
+        <div className='name-link-container'>
+          <div className='text-input-title'>Add Module Name:</div>
+          <input {...register('module_name', { required: true })} placeholder='Module Name' />
+          <div className='text-input-title'>Add Module Video Link:</div>
+          <input {...register('video_link', { required: true})} placeholder='Module Video Link' />
+        </div>
+
         <div className='checkbox-container'>
+          <h2>Select The Track/s You Would Like To Add The New Module To</h2>
           <label htmlFor="option1">
             <input type="checkbox" id='option1' value="1" {...register('intended_track')}/>
             Manufacturer Sales
@@ -57,8 +71,13 @@ function AddModulesComp() {
             Service Provider Sales Operations/Invoicing
           </label>
         </div>
-        <input type="submit" />
+        
+        <input className='add-mod-submit-btn' type="submit" />
       </form>
+    </div>
+
+    <div className='add-mod-tip'>** Note that modules can be edited or deleted in the "Edit Modules" tab **</div>
+
     </>
   )
 }

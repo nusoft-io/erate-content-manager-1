@@ -1,0 +1,128 @@
+$background-grey: #e8e8e8;
+$text-color: #333;
+$erate-blue: #0d3e70;
+$erate-orange: #ff6b00;
+
+
+.add-mod-title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e8e8e8;
+  width: 100%;
+  padding-bottom: 4px;
+  padding-top: 4px;
+
+}
+
+.add-mod-title {
+  font-size: 30px;
+  color: $erate-blue;
+  font-family: 'open sans', sans-serif;
+  margin-left: 10px;
+}
+
+.add-mod-form-title {
+  font-family: 'open sans', sans-serif;
+  font-size: 20px;
+  color: $erate-blue;
+  text-align: center;
+  margin: 10px 0 0 0;
+  padding-bottom: 4px;
+}
+
+.add-mod-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  min-width: 600px;
+  overflow-y: auto;
+}
+
+.add-module-form {
+  border: 1px solid rgb(196, 196, 196);
+  border-radius: 4px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.name-link-container {
+  display:flex;
+  flex-direction: column;
+  align-self: center;
+  width: 98%;
+  margin-top: 10px;
+  font-family: "open sans", sans-serif;
+  input {
+    height: 20px;
+    border-radius: 2px;
+    border: 1px solid #ccc;
+    color: $text-color;
+    margin-bottom: 8px;
+  }
+}
+
+.text-input-title {
+  font-size: 16px;
+  color: $text-color;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 6px;
+  h2 {
+    margin-bottom: 10px;
+    background-color: $background-grey;
+    justify-self: center;
+    padding-top: 6px;
+    color: $text-color;
+    font-size: 15px;
+  }
+  label {
+    margin-left: 1%;
+    height: 26px;
+    font-size: 18px;
+    color: $text-color;
+    font-family: "open sans", sans-serif;
+    input {
+      margin-right: 4px;
+    }
+  }
+}
+
+.add-mod-submit-btn {
+  width: 200px;
+  height: 24px;
+  margin-bottom: 8px;
+  align-self: center;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.add-mod-submit-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.add-mod-tip {
+  font-size: 14px;
+  color: $text-color;
+  font-family: "open sans", sans-serif;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
