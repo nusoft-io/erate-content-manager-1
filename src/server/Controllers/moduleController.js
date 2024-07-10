@@ -36,7 +36,6 @@ moduleController.addModule = async (req, res, next) => {
       let lastElement = await db.query(queryStr3, [el]);
       if (!lastElement.length) {
         moduleOrder[el] = 0;
-        continue;
       } else {
         console.log('last element', lastElement)
         moduleOrder[el] = (Number(lastElement[0].module_order) + 1);
@@ -247,6 +246,44 @@ moduleController.getAnswers = async (req, res, next) => {
     })
   }
   return next();
+}
+
+moduleController.addToTrack = async (req, res, next) => {
+  try {
+    const intended_track = req.body.formData.intended_track;
+    const module_id = req.body.module_id;
+    console.log('module_id', module_id)
+    console.log('intended_track', intended_track)
+    // DELETE CURR MODULE MATCHES
+    const queryStr1 = `DELETE FROM track_module_match WHERE module_id = ?`;
+    await db.query(queryStr1, [module_id]);
+
+    // LOOP OVER EACH TRACK AND ADD TO TRACK_MODULE_MATCH IN CORRECT ORDER
+    let moduleOrder = {};
+
+    for (let el of intended_track) {
+      const queryStr3 = `SELECT * FROM track_module_match WHERE track_id = ? ORDER BY module_order DESC LIMIT 1`;
+  
+      let lastElement = await db.query(queryStr3, [el]);
+      if (!lastElement.length) {
+        moduleOrder[el] = 0;
+      } else {
+        console.log('last element', lastElement)
+        moduleOrder[el] = (Number(lastElement[0].module_order) + 1);
+      }
+  
+      console.log('moduleOrder', moduleOrder)
+
+    const matchTableQuery = `INSERT INTO track_module_match (track_id, module_id, module_order) VALUES (?, ?, ?)`;
+    await db.query(matchTableQuery, [el, module_id, moduleOrder[el]]);
+    }
+
+  } catch (err) {
+    return next({
+      log: 'moduleController.addToTrack: ERROR: Invalid request',
+      message: { err: 'moduleController.addToTrack: ERROR: Check server logs for details' },
+    })
+  }
 }
 
 

@@ -4,7 +4,7 @@ TRACKS :
 
 
 MODULES : 
-- on edit modules: need to be able to add/change the track its attached to.
+- do we want to warn if no tracks are selected when adding/editing tracks by warning that no tracks are selected?
 
 
 QUESTONS :
@@ -13,3 +13,4 @@ QUESTONS :
 
 currently working on:
 - styling
+- update the database with mods new/edited attached tracks

@@ -3,17 +3,58 @@ $text-color: #333;
 $erate-blue: #0d3e70;
 $erate-orange: #ff6b00;
 
+.open-details-master-container {
+  background-color: rgb(247, 247, 247);
+  height: 100%;
+  padding-top: 6px;
+  // display: flex;
+  // flex-direction: column;
+  // align-items: center;
+}
+
 
 .vid-details-container {
   display: flex;
   flex-direction: column;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+
+}
+
+.vid-detail-link {
+  margin-left: 4px;
+  text-decoration: none;
+  color: #0d3e70;
+  font-style: italic;
 }
 
 .track-details-container {
   display: flex;
   flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.addedit-track-btn {
+  margin-bottom: 16px;
+}
+
+.curr-track-modal-details {
   margin-bottom: 10px;
+}
+
+.attached-tracks-modal-title {
+  margin-right: 6px;
+  font-size: 20px;
+  border-bottom: 1px solid #d1d1d1;
+}
+
+.attached-tracks-track-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-options-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .question-details-container {
@@ -23,16 +64,32 @@ $erate-orange: #ff6b00;
 
 }
 
-
-.open-details-master-container {
-  background-color: rgb(237, 235, 235);
+.question-inner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
+.add-question-btn {
+  width: 120px;
+  margin-bottom: 16px;
+}
+
+.show-question-btn {
+  width: 120px;
+}
+
+
 
 .box-detail-title {
   font-family: 'Open Sans', sans-serif;
   color: $erate-blue;
   font-size: 20px;
   border-bottom: 1px solid #d1d1d1;
+}
+
+.box-detail-title-text {
+  margin-left: 16px;
 }
 
 .erate-btn {
