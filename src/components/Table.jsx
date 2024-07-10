@@ -13,7 +13,9 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Modal from '@mui/material/Modal';
-import { useForm, useFieldArray, set } from "react-hook-form";
+import { useForm, useFieldArray, set, get } from "react-hook-form";
+import '../styles/Table.scss';
+import { Spa } from '@mui/icons-material';
 
 const TrackNames = {
   'man_sales': 'Manufacturer Sales',
@@ -22,6 +24,15 @@ const TrackNames = {
   'sp_sales': 'Service Provider Sales',
   'sp_mgmt': 'Service Provider Management',
   'sp_opsinv': 'Service Provider Sales Operations and Inventory'
+};
+
+const TrackIds = {
+  '1': 'Manufacturer Sales',
+  '2': 'Manufacturer Management',
+  '3': 'Manufacturer Marketing',
+  '4': 'Service Provider Sales',
+  '5': 'Service Provider Management',
+  '6': 'Service Provider Sales Operations and Inventory'
 };
 
 const trueFalse = {
@@ -55,20 +66,37 @@ function Row(props) {
 
   // modal state variables //
   const [openModal, setOpenModal] = React.useState(false);
+  const [openModalTrack, setOpenModalTrack] = React.useState(false);
   const [answerAmount, setAnswerAmount] = useState(initialAnswerCount);
   const [questions, setQuestions] = useState([]);
   const [showQuestions, setShowQuestions] = useState(false);
   const [answers, setAnswers] = useState([]);
-  const [showAnswers, setShowAnswers] = useState(false);
+  const [showAnswers, setShowAnswers] = useState({});
+  const [currModTracks, setCurrModTracks] = useState([]);
+  const [currModQuestions, setCurrModQuestions] = useState([]);
 
   // modal functions //
-  const handleOpen = () => {
+  const handleOpen = (data) => {
+    console.log('data looking here', data);
     setOpenModal(true);
   }
   const handleClose = () => {
     setOpenModal(false);
     reset();
   }
+
+  // TRACK DETAILS MODAL FUNCTIONS //
+
+  const handleOpenTrack = (data) => {
+    setCurrModTracks(data);
+    setOpenModalTrack(true);
+  }
+
+  const handleCloseTrack = () => {
+    setOpenModalTrack(false);
+    reset();
+  }
+
 
   const { fields, append } = useFieldArray({
     control,
@@ -91,6 +119,8 @@ function Row(props) {
       body: JSON.stringify({ moduleId: moduleId, question: questionData, answers: answersData })
     })
     .then(response => response.json());
+    
+    getQuestions(moduleId);
     handleClose();
   };
   
@@ -98,6 +128,7 @@ function Row(props) {
   const handleCheckboxChange = (index, value) => {
     fields[index].correct = value;
   };
+
   // ADD QUESTION HELPER FUNC FOR SUBMITTING QUESTION //
   const onSubmit = (data) => {
     const hasCorrectAnswer = data.answers.some(answer => answer.correct);
@@ -110,6 +141,33 @@ function Row(props) {
     addQuestion(row.module_id, data.answers, data.question);
     reset({ answers: Array(2).fill({ answer: '', correct: false }) });
   };
+
+  // TRACK ADD/EDIT SUBMIT FUNCTION // 
+  const onSubmitTrack = (data) => {
+    console.log('from track form',data)
+    console.log('mod name', row.module_name);
+    console.log('mod id', row.module_id);
+
+    const formData = data;
+    const module_id = row.module_id;
+
+    fetch('/api/addtotrack', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ module_id, formData })
+    })
+
+    let newModTracks = [];
+    data.intended_track.forEach(track => {
+      newModTracks.push({ track_name: TrackIds[track]});
+    })
+    console.log('new mod tracks', newModTracks);
+    setCurrModTracks(newModTracks);
+    reset({ intended_track: [] })
+    handleCloseTrack();
+  }
 
 
   // GET QUESTIONS FROM DB FUNCTION //
@@ -164,26 +222,44 @@ function Row(props) {
     } else {
       getQuestions(moduleId);
       setShowQuestions(true);
+      console.log('questions', questions);
+
     }
   }
+
+  // const showAnswerModal = (questionId) => {
+  //   if (showAnswers) {
+  //     setShowAnswers(false);
+  //   } else {
+  //     getAnswers(questionId);
+  //     setShowAnswers(true);
+  //   }
+  // }
 
   const showAnswerModal = (questionId) => {
-    if (showAnswers) {
-      setShowAnswers(false);
-    } else {
+    setShowAnswers(prev => ({
+      ...prev,
+      [questionId]: !prev[questionId]
+    }));
+    if (!showAnswers[questionId]) {
       getAnswers(questionId);
-      setShowAnswers(true);
     }
   }
 
-  const openDropdown = () => {
+
+  const openDropdown = async (data) => {
     if (open){
       setOpen(false);
       setShowQuestions(false);
     } else {
       setOpen(true);
+      console.log('data looking hereeee',data);
+      setCurrModTracks(data.attachedTracks);
+      // await getQuestions(data.module_id);
+      // console.log('questions', questions);
     }
   }
+
 
 
   return (
@@ -193,7 +269,7 @@ function Row(props) {
           <IconButton
             aria-label="expand row"
             size="small"
-            onClick={() => openDropdown()}
+            onClick={() => openDropdown(row)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -202,133 +278,214 @@ function Row(props) {
           {row.module_name}
         </TableCell>
         <TableCell>
-          <button onClick={() => { deleteModule(row.module_id) }}>Delete Module</button>
+          <button className='erate-btn delete-mod-btn' onClick={() => { deleteModule(row.module_id) }}>Delete Module</button>
         </TableCell>
       </TableRow>
 
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <div>Module Details</div>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 , paddingLeft: 0, paddingRight: 0 }} colSpan={6}>
 
-              <div>
-                <span>Video Details</span>
-                {row.video_link ? (
-                  <a href={row.video_link} target="_blank" rel="noopener noreferrer">
-                    {row.video_link}
-                  </a>
-                ) : (
-                  "No video link available"
-                )}
-                  <form onSubmit={handleSubmit((data) => {
-                    updateVideoLink(row.module_id, data.video_link)
-                    reset();
-                    })}>
-                  <input {...register('video_link')} placeholder='New Video Link' />
-                  <input type="submit" />
-                </form>
-              </div>
+          <Collapse in={open} timeout="auto" style={{ paddingBottom: 0, paddingTop: 0 }}>
+            <div className='open-details-master-container'>
+              <Box sx={{ margin: 0 }}>
 
-              <div>
-                <span>Track Details</span>
-                {row.attachedTracks && row.attachedTracks.length > 0 ? (
-                  row.attachedTracks.map((track, index) => (
-                    <span key={index}>{TrackNames[track.track_name]}</span>
-                  ))
-                ) : (
-                  "Not connected to any tracks"
-                )}
-              </div>
-            </Box>
+                <div className='vid-details-container'>
+                  <div className='box-detail-title'> <span className='box-detail-title-text'>Video Details</span></div>
+                  {row.video_link ? (
+                    <>
+                      <div>
+                        Current Module Video Link: 
 
-            <Box sx={{ margin: 1 }}>
-                <div>
-                  <div>Questions</div>
+                        <a className='vid-detail-link' href={row.video_link} target="_blank" rel="noopener noreferrer">
+                          {row.video_link}
+                        </a>
+                      </div>
+                    </>
+                  ) : (
+                    "No video link available"
+                  )}
+                    <form onSubmit={handleSubmit((data) => {
+                      updateVideoLink(row.module_id, data.video_link)
+                      reset();
+                      })}>
+                    <input className='new-vid-link-input' {...register('video_link')} placeholder='New Video Link' />
+                    <input className='new-vid-link-submit' type="submit" />
+                  </form>
+                </div>
 
-                  <div>
-                    <button onClick={handleOpen}>Add Question</button>
-                    <Modal
-                      open={openModal}
-                      onClose={handleClose}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={modalStyle}>
-                        <div>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                          <input {...register("question")} placeholder="Question" />
-                          {fields.map((item, index) => (
-                            <div key={item.id}>
-                              <input {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
-                            </div>
-                          ))}
+                <div className='track-details-container'>
+                <div className='box-detail-title'> <span className='box-detail-title-text'>Track Details</span></div>
 
-                          <button type="button" onClick={() => {
-                            append({ answer: "", correct: false });
-                            setAnswerAmount(answerAmount + 1);
-                            }}>
-                            Add Answer
-                          </button>
-                          <fieldset>
-                            <legend>
-                              Select correct answer/s
-                            </legend>
-                            <div>
-                            {fields.map((_, index) => (
-                              <div key={index}>
-                                <label htmlFor={`correct${index}`}>Answer {index + 1}</label>
-                                <input 
-                                  type="checkbox" 
-                                  {...register(`answers.${index}.correct`)}
-                                  onChange={(e) => handleCheckboxChange(index, e.target.checked)} 
-                                />
-                              </div>
-                            ))}
-                            </div>
-                          </fieldset>
-                          <input type="submit" />
-                        </form>
-                        </div>
-                      </Box>
-                    </Modal>
-                  </div>
+                  { currModTracks.length > 0 ? (
+                    currModTracks.map((track, index) => (
+                      <span key={index}>{TrackNames[track.track_name] ? TrackNames[track.track_name] : track.track_name}</span>
+                    ))
+                  ) : (
+                    "Not connected to any tracks"
+                  )} 
 
-                  <button onClick={()=> {
-                    showQuestionModal(row.module_id);
-                    }
-                  }>show questions</button>
-
-                    {showQuestions ? <div>
-                    {questions.map(question => {
-                      console.log('question', question);
-                      return (
-                        <div key={question.question_id}>
-                          <div>{question.question_text}</div>
-                          <button onClick={()=> deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
-                          <button onClick={()=> showAnswerModal(question.question_id)}>Show Answers</button>
-                          {showAnswers ? 
-                            <div>
-                              {answers.map(answer => {
-                                return (
-                                  <div key={answer.answer_id}>
-                                    <div>{answer.answer_text}</div>
-                                    <div>{trueFalse[answer.is_correct]}</div>
-                                  </div>
-                                )
-                              })}
-                            </div> : null  
-                          }
-                        </div>
-                      )
-                    })}
-                  </div> : null}
-    
-                  
 
                 </div>
-            </Box>
+                <button className='addedit-track-btn' onClick={handleOpenTrack}>Add/Edit Tracks</button>
+                <Modal
+                          open={openModalTrack}
+                          onClose={handleCloseTrack}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                        >
+                          <Box sx={modalStyle}>
+                            <div>
+
+                              <div className='curr-track-modal-details'>
+                                {row.attachedTracks && row.attachedTracks.length > 0 ? (
+                                  <>
+                                  <div className='attached-tracks-modal-title'>Current Attached Tracks: </div>
+                                  <div className='attached-tracks-track-container'>
+                                    {row.attachedTracks.map((track, index) => (
+                                      <span key={index}>{TrackNames[track.track_name]}</span>
+                                    ))}
+                                  </div>
+                                  </>
+                                ) : (
+                                  "Not connected to any tracks"
+                                )}
+                              </div>
+
+                            <form onSubmit={handleSubmit(onSubmitTrack)}>
+                              
+                              <fieldset>
+                                <legend>
+                                  Select All Tracks You Want To Attach Module To (Including Current Tracks)
+                                </legend>
+                                <div className='track-options-container'>
+                                  <label htmlFor="option1">
+                                    <input type="checkbox" id='option1' value="1" {...register('intended_track')}/>
+                                    Manufacturer Sales
+                                  </label>
+                                  <label htmlFor="option2">
+                                    <input type="checkbox" id='option2' value="2" {...register('intended_track')}/>
+                                    Manufacturer Managment
+                                  </label>
+                                  <label htmlFor="option3">
+                                    <input type="checkbox" id='option3' value="3" {...register('intended_track')}/>
+                                    Manufacture Marketing
+                                  </label>
+                                  <label htmlFor="option4">
+                                    <input type="checkbox" id='option4' value="4" {...register('intended_track')}/>
+                                    Service Provider Sales
+                                  </label>
+                                  <label htmlFor="option5">
+                                    <input type="checkbox" id='option5' value="5" {...register('intended_track')}/>
+                                    Service Provider Management
+                                  </label>
+                                  <label htmlFor="option6">
+                                    <input type="checkbox" id='option6' value="6" {...register('intended_track')}/>
+                                    Service Provider Sales Operations/Invoicing
+                                  </label>
+                                </div>
+                              </fieldset>
+                              <input type="submit" />
+                            </form>
+                            </div>
+                          </Box>
+                        </Modal>
+
+              </Box>
+
+              <Box sx={{ margin: 0 }}>
+                  <div>
+                    
+
+                    <div className='question-details-container'>
+                    <div className='box-detail-title'> <span className='box-detail-title-text'>Question Details</span></div>
+
+                      <div className='question-inner-container'>
+                        <button className='add-question-btn' onClick={handleOpen}>Add Question</button>
+                        <Modal
+                          open={openModal}
+                          onClose={handleClose}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                        >
+                          <Box sx={modalStyle}>
+                            <div>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                              <input {...register("question")} placeholder="Question" />
+                              {fields.map((item, index) => (
+                                <div key={item.id}>
+                                  <input {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
+                                </div>
+                              ))}
+
+                              <button type="button" onClick={() => {
+                                append({ answer: "", correct: false });
+                                setAnswerAmount(answerAmount + 1);
+                                }}>
+                                Add Answer
+                              </button>
+                              <fieldset>
+                                <legend>
+                                  Select correct answer/s
+                                </legend>
+                                <div>
+                                {fields.map((_, index) => (
+                                  <div key={index}>
+                                    <label htmlFor={`correct${index}`}>Answer {index + 1}</label>
+                                    <input 
+                                      type="checkbox" 
+                                      {...register(`answers.${index}.correct`)}
+                                      onChange={(e) => handleCheckboxChange(index, e.target.checked)} 
+                                    />
+                                  </div>
+                                ))}
+                                </div>
+                              </fieldset>
+                              <input type="submit" />
+                            </form>
+                            </div>
+                          </Box>
+                        </Modal>
+                      
+
+                      
+                      <button className='show-question-btn' onClick={()=> {
+                        showQuestionModal(row.module_id);
+                        }
+                      }>Show Questions</button>
+
+                        {showQuestions ? <div>
+                          {questions.map(question => {
+                            return (
+                              <div key={question.question_id}>
+                                <div>{question.question_text}</div>
+                                <button onClick={() => deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
+                                <button onClick={() => showAnswerModal(question.question_id)}>Show Answers</button>
+                                {showAnswers[question.question_id] ? 
+                                  <div>
+                                    {answers.map(answer => {
+                                      return (
+                                        <div key={answer.answer_id}>
+                                          <div>{answer.answer_text}</div>
+                                          <div>{trueFalse[answer.is_correct]}</div>
+                                        </div>
+                                      )
+                                    })}
+                                  </div> : null  
+                                }
+                              </div>
+                            )
+                          })}
+                      </div> : null}
+                      </div>
+      
+                    
+                    </div>
+                  </div>
+              </Box>
+
+            </div>
           </Collapse>
+
         </TableCell>
       </TableRow>
 

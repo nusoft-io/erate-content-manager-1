@@ -85,6 +85,13 @@ app.post('/api/getanswers',
   }
 );
 
+app.post('/api/addtotrack',
+  moduleController.addToTrack,
+  (req, res) => {
+    res.status(200).send({'message':'Module added to track successfully'});
+  }
+);
+
 
 
 
