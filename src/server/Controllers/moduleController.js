@@ -68,7 +68,6 @@ moduleController.addModule = async (req, res, next) => {
 };
 
 
-
 moduleController.getAllModules = async (req, res, next) => {
   try {
     const queryStr = `SELECT * FROM modules`;
@@ -107,9 +106,6 @@ moduleController.getAllModules = async (req, res, next) => {
 };
 
 
-
-
-
 moduleController.deleteModule = async (req, res, next) => {
   try{
     const moduleId = req.body.moduleId;
@@ -128,7 +124,6 @@ moduleController.deleteModule = async (req, res, next) => {
 };
 
 
-// working on this
 moduleController.updateModuleOrder = async (req, res, next) => {
   try{
     const items = req.body.items;
@@ -174,6 +169,7 @@ moduleController.updateVideoLink = async (req, res, next) => {
   }
 };
 
+
 moduleController.addQuestion = async (req, res, next) => {
   try {
     console.log(' in addquestion / req body',req.body)
@@ -215,6 +211,7 @@ moduleController.getQuestions = async (req, res, next) => {
   return next();
 }
 
+
 moduleController.deleteQuestions = async (req, res, next) => {
   try {
     const questionId = req.body.questionId;
@@ -247,6 +244,7 @@ moduleController.getAnswers = async (req, res, next) => {
   }
   return next();
 }
+
 
 moduleController.addToTrack = async (req, res, next) => {
   try {

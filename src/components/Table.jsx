@@ -13,7 +13,7 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Modal from '@mui/material/Modal';
-import { useForm, useFieldArray, set } from "react-hook-form";
+import { useForm, useFieldArray, set, get } from "react-hook-form";
 import '../styles/Table.scss';
 import { Spa } from '@mui/icons-material';
 
@@ -71,8 +71,9 @@ function Row(props) {
   const [questions, setQuestions] = useState([]);
   const [showQuestions, setShowQuestions] = useState(false);
   const [answers, setAnswers] = useState([]);
-  const [showAnswers, setShowAnswers] = useState(false);
+  const [showAnswers, setShowAnswers] = useState({});
   const [currModTracks, setCurrModTracks] = useState([]);
+  const [currModQuestions, setCurrModQuestions] = useState([]);
 
   // modal functions //
   const handleOpen = (data) => {
@@ -118,6 +119,8 @@ function Row(props) {
       body: JSON.stringify({ moduleId: moduleId, question: questionData, answers: answersData })
     })
     .then(response => response.json());
+    
+    getQuestions(moduleId);
     handleClose();
   };
   
@@ -219,19 +222,32 @@ function Row(props) {
     } else {
       getQuestions(moduleId);
       setShowQuestions(true);
+      console.log('questions', questions);
+
     }
   }
+
+  // const showAnswerModal = (questionId) => {
+  //   if (showAnswers) {
+  //     setShowAnswers(false);
+  //   } else {
+  //     getAnswers(questionId);
+  //     setShowAnswers(true);
+  //   }
+  // }
 
   const showAnswerModal = (questionId) => {
-    if (showAnswers) {
-      setShowAnswers(false);
-    } else {
+    setShowAnswers(prev => ({
+      ...prev,
+      [questionId]: !prev[questionId]
+    }));
+    if (!showAnswers[questionId]) {
       getAnswers(questionId);
-      setShowAnswers(true);
     }
   }
 
-  const openDropdown = (data) => {
+
+  const openDropdown = async (data) => {
     if (open){
       setOpen(false);
       setShowQuestions(false);
@@ -239,6 +255,8 @@ function Row(props) {
       setOpen(true);
       console.log('data looking hereeee',data);
       setCurrModTracks(data.attachedTracks);
+      // await getQuestions(data.module_id);
+      // console.log('questions', questions);
     }
   }
 
@@ -297,13 +315,6 @@ function Row(props) {
 
                 <div className='track-details-container'>
                 <div className='box-detail-title'> <span className='box-detail-title-text'>Track Details</span></div>
-                  {/* {row.attachedTracks && row.attachedTracks.length > 0 ? (
-                    row.attachedTracks.map((track, index) => (
-                      <span key={index}>{TrackNames[track.track_name]}</span>
-                    ))
-                  ) : (
-                    "Not connected to any tracks"
-                  )} */}
 
                   { currModTracks.length > 0 ? (
                     currModTracks.map((track, index) => (
@@ -443,28 +454,27 @@ function Row(props) {
                       }>Show Questions</button>
 
                         {showQuestions ? <div>
-                        {questions.map(question => {
-                          console.log('question', question);
-                          return (
-                            <div key={question.question_id}>
-                              <div>{question.question_text}</div>
-                              <button onClick={()=> deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
-                              <button onClick={()=> showAnswerModal(question.question_id)}>Show Answers</button>
-                              {showAnswers ? 
-                                <div>
-                                  {answers.map(answer => {
-                                    return (
-                                      <div key={answer.answer_id}>
-                                        <div>{answer.answer_text}</div>
-                                        <div>{trueFalse[answer.is_correct]}</div>
-                                      </div>
-                                    )
-                                  })}
-                                </div> : null  
-                              }
-                            </div>
-                          )
-                        })}
+                          {questions.map(question => {
+                            return (
+                              <div key={question.question_id}>
+                                <div>{question.question_text}</div>
+                                <button onClick={() => deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
+                                <button onClick={() => showAnswerModal(question.question_id)}>Show Answers</button>
+                                {showAnswers[question.question_id] ? 
+                                  <div>
+                                    {answers.map(answer => {
+                                      return (
+                                        <div key={answer.answer_id}>
+                                          <div>{answer.answer_text}</div>
+                                          <div>{trueFalse[answer.is_correct]}</div>
+                                        </div>
+                                      )
+                                    })}
+                                  </div> : null  
+                                }
+                              </div>
+                            )
+                          })}
                       </div> : null}
                       </div>
       
