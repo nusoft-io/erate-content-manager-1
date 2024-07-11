@@ -66,15 +66,14 @@ $erate-orange: #ff6b00;
 }
 
 .question-inner-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+
 }
 
 .add-question-btn {
   width: 120px;
   height: 24px;
   margin-bottom: 16px;
+  margin-right: 16px;
   background-color: #f2f2f2;
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
   color: $text-color;
@@ -193,15 +192,101 @@ $erate-orange: #ff6b00;
   border-bottom: 1px solid #e3e3e3;
 }
 
+.question-text {
+  font-weight: bold;
+  font-size: 14px;
+}
+
 .solo-answer-container {
 
 }
 
 .answer-text {
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .answer-correct-text {
   font-style: italic;
+}
+
+.question-modal-container {
+  overflow: scroll;
+}
+
+// add question modal stuff // 
+.question-input {
+  margin-top: 4px;
+  border: 1px solid #b4b4b4;
+  border-radius: 4px;
+  height: 18px;
+  width: 100%;
+}
+
+.answer-input {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  border: 1px solid #b4b4b4;
+  border-radius: 4px;
+  height: 18px;
+  width: 100%;
+}
+
+.enter-answers-title-container {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.answer-remove-btn {
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.answer-remove-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.add-answer-btn {
+  height: 24px;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.add-answer-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.add-question-formsubmit-btn {
+  height: 24px;
+  width: 100px;
+  margin-top: 10px;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.submit-btn-modal-container {
+  display: flex;
+  justify-content: center;
 }

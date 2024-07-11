@@ -62,6 +62,12 @@ function Row(props) {
       answers: Array(2).fill({ answer: '', correct: false })
     }
   });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "answers"
+  });
+
   const [initialAnswerCount, setInitialAnswerCount] = useState(2);
 
   // modal state variables //
@@ -97,11 +103,6 @@ function Row(props) {
     reset();
   }
 
-
-  const { fields, append } = useFieldArray({
-    control,
-    name: "answers"
-  });
 
 
 
@@ -328,74 +329,72 @@ function Row(props) {
                 </div>
                 <button className='addedit-track-btn' onClick={handleOpenTrack}>Add/Edit Tracks</button>
                 <Modal
-                          open={openModalTrack}
-                          onClose={handleCloseTrack}
-                          aria-labelledby="modal-modal-title"
-                          aria-describedby="modal-modal-description"
-                        >
-                          <Box sx={modalStyle}>
-                            <div>
+                  open={openModalTrack}
+                  onClose={handleCloseTrack}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                  >
+                  <Box sx={modalStyle}>
+                    <div>
 
-                              <div className='curr-track-modal-details'>
-                                {row.attachedTracks && row.attachedTracks.length > 0 ? (
-                                  <>
-                                  <div className='attached-tracks-modal-title'>Current Attached Tracks: </div>
-                                  <div className='attached-tracks-track-container'>
-                                    {row.attachedTracks.map((track, index) => (
-                                      <span key={index}>{TrackNames[track.track_name]}</span>
-                                    ))}
-                                  </div>
-                                  </>
-                                ) : (
-                                  "Not connected to any tracks"
-                                )}
-                              </div>
+                      <div className='curr-track-modal-details'>
+                        {row.attachedTracks && row.attachedTracks.length > 0 ? (
+                          <>
+                          <div className='attached-tracks-modal-title'>Current Attached Tracks: </div>
+                          <div className='attached-tracks-track-container'>
+                            {row.attachedTracks.map((track, index) => (
+                              <span key={index}>{TrackNames[track.track_name]}</span>
+                            ))}
+                          </div>
+                          </>
+                        ) : (
+                          "Not connected to any tracks"
+                        )}
+                      </div>
 
-                            <form onSubmit={handleSubmit(onSubmitTrack)}>
-                              
-                              <fieldset>
-                                <legend>
-                                  Select All Tracks You Want To Attach Module To (Including Current Tracks)
-                                </legend>
-                                <div className='track-options-container'>
-                                  <label htmlFor="option1">
-                                    <input type="checkbox" id='option1' value="1" {...register('intended_track')}/>
-                                    Manufacturer Sales
-                                  </label>
-                                  <label htmlFor="option2">
-                                    <input type="checkbox" id='option2' value="2" {...register('intended_track')}/>
-                                    Manufacturer Managment
-                                  </label>
-                                  <label htmlFor="option3">
-                                    <input type="checkbox" id='option3' value="3" {...register('intended_track')}/>
-                                    Manufacture Marketing
-                                  </label>
-                                  <label htmlFor="option4">
-                                    <input type="checkbox" id='option4' value="4" {...register('intended_track')}/>
-                                    Service Provider Sales
-                                  </label>
-                                  <label htmlFor="option5">
-                                    <input type="checkbox" id='option5' value="5" {...register('intended_track')}/>
-                                    Service Provider Management
-                                  </label>
-                                  <label htmlFor="option6">
-                                    <input type="checkbox" id='option6' value="6" {...register('intended_track')}/>
-                                    Service Provider Sales Operations/Invoicing
-                                  </label>
-                                </div>
-                              </fieldset>
-                              <input type="submit" />
-                            </form>
-                            </div>
-                          </Box>
-                        </Modal>
+                    <form onSubmit={handleSubmit(onSubmitTrack)}>
+                      
+                      <fieldset>
+                        <legend>
+                          Select All Tracks You Want To Attach Module To (Including Current Tracks)
+                        </legend>
+                        <div className='track-options-container'>
+                          <label htmlFor="option1">
+                            <input type="checkbox" id='option1' value="1" {...register('intended_track')}/>
+                            Manufacturer Sales
+                          </label>
+                          <label htmlFor="option2">
+                            <input type="checkbox" id='option2' value="2" {...register('intended_track')}/>
+                            Manufacturer Managment
+                          </label>
+                          <label htmlFor="option3">
+                            <input type="checkbox" id='option3' value="3" {...register('intended_track')}/>
+                            Manufacture Marketing
+                          </label>
+                          <label htmlFor="option4">
+                            <input type="checkbox" id='option4' value="4" {...register('intended_track')}/>
+                            Service Provider Sales
+                          </label>
+                          <label htmlFor="option5">
+                            <input type="checkbox" id='option5' value="5" {...register('intended_track')}/>
+                            Service Provider Management
+                          </label>
+                          <label htmlFor="option6">
+                            <input type="checkbox" id='option6' value="6" {...register('intended_track')}/>
+                            Service Provider Sales Operations/Invoicing
+                          </label>
+                        </div>
+                      </fieldset>
+                      <input type="submit" />
+                    </form>
+                    </div>
+                  </Box>
+                </Modal>
 
               </Box>
 
               <Box sx={{ margin: 0 }}>
                   <div>
-                    
-
                     <div className='question-details-container'>
                     <div className='box-detail-title'> <span className='box-detail-title-text'>Question Details</span></div>
 
@@ -406,23 +405,41 @@ function Row(props) {
                           onClose={handleClose}
                           aria-labelledby="modal-modal-title"
                           aria-describedby="modal-modal-description"
+                          className='question-modal-container'
                         >
-                          <Box sx={modalStyle}>
-                            <div>
+                          <Box sx={{...modalStyle, overflow: 'auto'}}>
+                            <div className='add-question-master-modal'>
                             <form onSubmit={handleSubmit(onSubmit)}>
-                              <input {...register("question")} placeholder="Question" />
-                              {fields.map((item, index) => (
-                                <div key={item.id}>
-                                  <input {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
+                              <fieldset>
+                                <legend>Input Question & Answers</legend>
+                                {/* <input className='question-input' {...register("question")} placeholder="Question" /> */}
+                                <div className='enter-question-text'>Enter Question:</div>
+                                <textarea 
+                                  className='question-input' 
+                                  {...register("question")} 
+                                  placeholder="Question" 
+                                  rows="3" 
+                                  style={{ width: '100%', height: '30px', fontFamily: 'Arial', fontSize: '14px', resize: 'vertical'}}
+                                ></textarea>
+                                <div className='enter-answers-title-container'>
+                                  <div className='enter-answers-text'>Enter Answers:</div>
+                                  <button className='add-answer-btn' type="button" onClick={() => {
+                                    append({ answer: "", correct: false });
+                                    setAnswerAmount(answerAmount + 1);
+                                    }}>
+                                    Add Answer
+                                  </button>
                                 </div>
-                              ))}
+                                {fields.map((item, index) => (
+                                  <div key={item.id}>
+                                    <input className='answer-input' {...register(`answers.${index}.answer`)} placeholder={`Answer ${index + 1}`} />
+                                    <button className='answer-remove-btn' type='button' onClick={() => remove(index)}>Remove</button>
+                                  </div>
+                                ))}
 
-                              <button type="button" onClick={() => {
-                                append({ answer: "", correct: false });
-                                setAnswerAmount(answerAmount + 1);
-                                }}>
-                                Add Answer
-                              </button>
+                              </fieldset>
+
+
                               <fieldset>
                                 <legend>
                                   Select correct answer/s
@@ -440,13 +457,13 @@ function Row(props) {
                                 ))}
                                 </div>
                               </fieldset>
-                              <input type="submit" />
+                              <div className='submit-btn-modal-container'>
+                                <input className='add-question-formsubmit-btn' type="submit" />
+                              </div>
                             </form>
                             </div>
                           </Box>
                         </Modal>
-                      
-
                       
                       <button className='show-question-btn' onClick={()=> {
                         showQuestionModal(row.module_id);
