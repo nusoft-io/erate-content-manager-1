@@ -453,32 +453,41 @@ function Row(props) {
                         }
                       }>Show Questions</button>
 
-                        {showQuestions ? <div>
-                          {questions.map(question => {
-                            return (
-                              <div key={question.question_id}>
-                                <div>{question.question_text}</div>
-                                <button onClick={() => deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
-                                <button onClick={() => showAnswerModal(question.question_id)}>Show Answers</button>
-                                {showAnswers[question.question_id] ? 
-                                  <div>
-                                    {answers.map(answer => {
-                                      return (
-                                        <div key={answer.answer_id}>
-                                          <div>{answer.answer_text}</div>
-                                          <div>{trueFalse[answer.is_correct]}</div>
-                                        </div>
-                                      )
-                                    })}
-                                  </div> : null  
-                                }
-                              </div>
-                            )
-                          })}
-                      </div> : null}
+                      {showQuestions ? (
+                        questions.length > 0 ? (
+                          <div>
+                            <ol>
+                              {questions.map(question => (
+                                <li className='question-item' key={question.question_id}>
+                                  <div className='question-text'>{question.question_text}</div>
+                                  <div className='question-btn-container'>
+                                    <button className='show-answer-btn' onClick={() => showAnswerModal(question.question_id)}>Show Answers</button>
+                                    <button className='delete-answer-btn' onClick={() => deleteQuestions(row.module_id, question.question_id)}>Delete Question</button>
+                                  </div>
+                                  {showAnswers[question.question_id] && (
+                                    <ul>
+                                      {answers.map(answer => (
+                                        <li className='solo-answer-container' key={answer.answer_id}>
+                                          <div >
+                                            <div className='answer-text'>{answer.answer_text}</div>
+                                            <div className='answer-correct-text'>{trueFalse[answer.is_correct]}</div>
+                                          </div>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </li>
+                              ))}
+                            </ol>
+                          </div>
+                        ) : (
+                          <div>No questions available</div>
+                        )
+                      ) : null}
+
+                          
                       </div>
       
-                    
                     </div>
                   </div>
               </Box>

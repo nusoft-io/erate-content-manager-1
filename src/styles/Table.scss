@@ -7,6 +7,7 @@ $erate-orange: #ff6b00;
   background-color: rgb(247, 247, 247);
   height: 100%;
   padding-top: 6px;
+  padding-left: 10px;
   // display: flex;
   // flex-direction: column;
   // align-items: center;
@@ -72,11 +73,76 @@ $erate-orange: #ff6b00;
 
 .add-question-btn {
   width: 120px;
+  height: 24px;
   margin-bottom: 16px;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.add-question-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
 }
 
 .show-question-btn {
   width: 120px;
+  height: 24px;
+  margin-bottom: 16px;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.show-question-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.delete-answer-btn{
+  height: 24px;
+  margin-bottom: 16px;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.delete-answer-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.show-answer-btn {
+  height: 24px;
+  margin-bottom: 16px;
+  background-color: #f2f2f2;
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.1) 100%);
+  color: $text-color;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+}
+
+.show-answer-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
 }
 
 
@@ -89,7 +155,7 @@ $erate-orange: #ff6b00;
 }
 
 .box-detail-title-text {
-  margin-left: 16px;
+  // margin-left: 16px;
 }
 
 .erate-btn {
@@ -110,4 +176,32 @@ $erate-orange: #ff6b00;
 
 .delete-mod-btn {
   height: 30px;
+}
+
+.delete-mod-btn:hover {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 10%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+.question-btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+
+.question-item {
+  margin-left: 20px;
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.solo-answer-container {
+
+}
+
+.answer-text {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.answer-correct-text {
+  font-style: italic;
 }
