@@ -181,7 +181,21 @@ moduleController.updateVideoLink = async (req, res, next) => {
 };
 
 moduleController.updateAskCount = async (req, res, next) => {
-  console.log("im hitttt");
+  try {
+    const moduleId = req.body.moduleId;
+    const askCount = req.body.ask_count;
+    const queryStr = `UPDATE modules SET ask_count = ? WHERE module_id = ?`;
+    const VALUES = [askCount, moduleId];
+    await db.query(queryStr, VALUES);
+    return next();
+  } catch (err) {
+    return next({
+      log: "moduleController.updateVideoLink: ERROR: Invalid request",
+      message: {
+        err: "moduleController.updateVideoLink: ERROR: Check server logs for details",
+      },
+    });
+  }
 };
 
 moduleController.addQuestion = async (req, res, next) => {

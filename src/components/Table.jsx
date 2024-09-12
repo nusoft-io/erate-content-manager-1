@@ -89,7 +89,7 @@ function Row(props) {
 
   // modal functions //
   const handleOpen = (data) => {
-    console.log("data looking here", data);
+    // console.log("data looking here", data);
     setOpenModal(true);
   };
   const handleClose = () => {
@@ -113,14 +113,14 @@ function Row(props) {
 
   // ADD QUESTION W/ANSWERS TO DB //
   const addQuestion = (moduleId, answersData, questionData) => {
-    console.log(
-      "module id",
-      moduleId,
-      "question data",
-      questionData,
-      "answers data",
-      answersData
-    );
+    // console.log(
+    //   "module id",
+    //   moduleId,
+    //   "question data",
+    //   questionData,
+    //   "answers data",
+    //   answersData
+    // );
     fetch("/api/addquestion", {
       method: "POST",
       headers: {
@@ -157,9 +157,9 @@ function Row(props) {
 
   // TRACK ADD/EDIT SUBMIT FUNCTION //
   const onSubmitTrack = (data) => {
-    console.log("from track form", data);
-    console.log("mod name", row.module_name);
-    console.log("mod id", row.module_id);
+    // console.log("from track form", data);
+    // console.log("mod name", row.module_name);
+    // console.log("mod id", row.module_id);
 
     const formData = data;
     const module_id = row.module_id;
@@ -184,7 +184,7 @@ function Row(props) {
 
   // GET QUESTIONS FROM DB FUNCTION //
   const getQuestions = (moduleId) => {
-    console.log("looking for mod id here", moduleId);
+    // console.log("looking for mod id here", moduleId);
     fetch("/api/getquestions", {
       method: "POST",
       headers: {
@@ -264,7 +264,7 @@ function Row(props) {
       setOpen(true);
       console.log("data looking hereeee", data);
       setCurrModTracks(data.attachedTracks);
-      // await getQuestions(data.module_id);
+      await getQuestions(data.module_id);
       // console.log('questions', questions);
     }
   };
@@ -466,28 +466,7 @@ function Row(props) {
                 </Modal>
               </Box>
 
-              <Box>
-                <div className="ask-count-container">
-                  <div>Num of questions currently being asked:</div>
-                  <div className="ask-count">
-                    {row.ask_count === 99 ? "All Questions" : row.ask_count}
-                  </div>
-                </div>
-                <div>Change number of asked questions</div>
-                <form
-                  onSubmit={handleSubmit((data) => {
-                    updateAskCount(row.module_id, data.ask_count);
-                    reset();
-                  })}
-                >
-                  <input
-                    className="new-vid-link-input"
-                    {...register("ask_count")}
-                    placeholder="# of questions"
-                  />
-                  <input className="new-vid-link-submit" type="submit" />
-                </form>
-              </Box>
+              <Box></Box>
 
               <Box sx={{ margin: 0 }}>
                 <div>
@@ -497,6 +476,35 @@ function Row(props) {
                       <span className="box-detail-title-text">
                         Question Details
                       </span>
+                    </div>
+
+                    <div className="ask-count-master-container">
+                      <div className="ask-count-container">
+                        <div>Total # of Questions: </div>
+                        <div className="ask-count">{questions.length}</div>
+                      </div>
+                      <div className="ask-count-container">
+                        <div>Num of questions currently being asked:</div>
+                        <div className="ask-count">
+                          {row.ask_count === 99
+                            ? "All Questions"
+                            : row.ask_count}
+                        </div>
+                      </div>
+                      {/* <div>Change number of asked questions</div> */}
+                      <form
+                        onSubmit={handleSubmit((data) => {
+                          updateAskCount(row.module_id, data.ask_count);
+                          reset();
+                        })}
+                      >
+                        <input
+                          className="new-vid-link-input"
+                          {...register("ask_count")}
+                          placeholder="new # of questions"
+                        />
+                        <input className="new-ask-count-submit" type="submit" />
+                      </form>
                     </div>
 
                     <div className="question-inner-container">
