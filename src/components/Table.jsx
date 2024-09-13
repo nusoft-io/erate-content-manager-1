@@ -233,7 +233,7 @@ function Row(props) {
     } else {
       getQuestions(moduleId);
       setShowQuestions(true);
-      console.log("questions", questions);
+      // console.log("questions", questions);
     }
   };
 
@@ -486,7 +486,7 @@ function Row(props) {
                       <div className="ask-count-container">
                         <div>Num of questions currently being asked:</div>
                         <div className="ask-count">
-                          {row.ask_count === 99
+                          {row.ask_count >= questions.length
                             ? "All Questions"
                             : row.ask_count}
                         </div>
