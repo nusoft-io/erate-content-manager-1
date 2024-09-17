@@ -85,28 +85,7 @@ function Sidebar({ setActiveComp }) {
             </>
           )}
         </li>
-        <li className={`sb-menu-item ${expanded === 'QuestionsComp' ? 'expanded' : ''}`}>
-          <div className='sb-menu-item-title' onClick={() => toggleExpand('QuestionsComp')}>
-            <span>Questions</span>
-            <img src={dropdownIcon} alt="dropdown" />
-          </div>
-          {expanded === 'QuestionsComp' && (
-            <>
-             <ul className='sub-items-ul'>
-                <li className='sb-submenu-item' onClick={() => setActiveComp('EditQuestion')}>
-                  <div className='sb-menu-item-title'>
-                    <span>Edit Question</span>
-                  </div>
-                </li>
-                <li className='sb-submenu-item' onClick={() => setActiveComp('AddQuestion')}>
-                  <div className='sb-menu-item-title'>
-                    <span>Add Question</span>
-                  </div>
-                </li>
-              </ul>
-            </>
-          )}
-        </li>
+
       </ul>
     </div>
   );
