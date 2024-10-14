@@ -1,14 +1,16 @@
 const express = require("express");
+const path = require("path"); // Import path module for serving static files
 const trackController = require("./Controllers/trackController.js");
 const moduleController = require("./Controllers/moduleController.js");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use PORT from environment variable or default to 3000
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ---------------- ROUTES ---------------- //
+// API Routes
 app.post(
   "/api/gettrackmodules",
   trackController.getTrackModules,
@@ -81,6 +83,15 @@ app.post("/api/addtotrack", moduleController.addToTrack, (req, res) => {
   res.status(200).send({ message: "Module added to track successfully" });
 });
 
+// Serve static files from the React app's build folder
+app.use(express.static(path.join(__dirname, "build"))); // Adjust the path if necessary
+
+// The "catchall" handler: for any request that doesn't match one above,
+// send back React's index.html file.
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 // GLOBAL ERROR HANDLER //
 app.use((err, req, res, next) => {
   const defaultErr = {
@@ -89,7 +100,7 @@ app.use((err, req, res, next) => {
     message: { err: "An error occurred" },
   };
   const errorObj = Object.assign({}, defaultErr, err);
-  console.log("Server error occured: ", errorObj.log);
+  console.log("Server error occurred: ", errorObj.log);
   return res.status(errorObj.status).json(errorObj.message);
 });
 
