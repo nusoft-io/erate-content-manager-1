@@ -6,7 +6,7 @@
   "scripts": {
     "prebuild": "npm install",
     "build": "webpack --mode production",
-    "start": "node server.js",
+    "start": "node src/server/server.js",
     "dev": "nodemon ./client/Server/server.js",
     "both": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color\" \"nodemon ./src/server/server.js\""
   },
