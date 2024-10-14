@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild": "npm install",
     "build": "webpack --mode production",
     "start": "node server.js",
     "dev": "nodemon ./client/Server/server.js",
